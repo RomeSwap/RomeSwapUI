@@ -1,3 +1,3 @@
 export default function Home() {
-	return <main>Landing page</main>;
+	return <main>Swap page</main>;
 }
