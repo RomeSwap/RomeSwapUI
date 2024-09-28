@@ -4,6 +4,8 @@
 
 body {
 	font-family: "Poppins", Arial, Helvetica, sans-serif;
+	width: screen;
+	overflow-x: hidden;
 }
 
 @layer utilities {
