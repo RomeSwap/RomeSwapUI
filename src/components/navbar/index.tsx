@@ -52,8 +52,8 @@ export default function Navbar() {
 	};
 
 	return (
-		<header className="fixed z-40 top-0 left-0 bg-black text-light w-full h-[70px]">
-			<nav className="flex items-center justify-between h-full max-w-[300px] md:max-w-2xl lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
+		<header className="fixed z-40 top-0 left-0 bg-black text-light w-full h-[70px] overflow-hidden">
+			<nav className="relative flex items-center justify-between h-full max-w-[300px] md:max-w-2xl lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
 				<Link href={"/"}>
 					<div className="block lg:hidden">
 						<Image
@@ -140,6 +140,24 @@ export default function Navbar() {
 				</div>
 				<CustomConnectWalletBtn />
 			</nav>
+			<div className="relative select-none pointer-events-none z-0 w-full h-full">
+				<div className="absolute -top-[520px] -left-[264px]">
+					<Image
+						src={"/ellipse-green.png"}
+						width={900}
+						height={900}
+						alt="Ellipse"
+					/>
+				</div>
+				<div className="absolute -top-[700px] -right-[364px]">
+					<Image
+						src={"/ellipse-purple.png"}
+						width={1200}
+						height={1200}
+						alt="Ellipse"
+					/>
+				</div>
+			</div>
 		</header>
 	);
 }
