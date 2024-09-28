@@ -13,7 +13,10 @@ import { Poppins } from "next/font/google";
 
 // Font
 // import localFont from "next/font/local";
+
+// Components
 import Navbar from "@/components/navbar";
+import BgEllipseSvgs from "@/components/BgEllipseSvgs";
 
 // Providers
 import RainBowKitCustomProvider from "@/providers/rainbowkitprovider";
@@ -38,10 +41,13 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`${poppins.variable} text-light antialiased`}>
+			<body
+				className={`${poppins.variable} bg-background text-light antialiased`}
+			>
 				<RainBowKitCustomProvider>
 					<Navbar />
 					{children}
+					<BgEllipseSvgs />
 				</RainBowKitCustomProvider>
 			</body>
 		</html>
