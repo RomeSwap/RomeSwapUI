@@ -2,10 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar {
+	@apply w-1.5;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	@apply bg-dark rounded-lg;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #555; /* Color of the thumb on hover */
+}
+
 body {
 	font-family: "Poppins", Arial, Helvetica, sans-serif;
 	width: screen;
 	overflow-x: hidden;
+}
+
+main {
+	@apply mt-20 lg:mt-24;
 }
 
 @layer utilities {

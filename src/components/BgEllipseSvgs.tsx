@@ -1,8 +1,9 @@
+import React from "react";
 import Image from "next/image";
 
 const BgEllipseSvgs = () => {
 	return (
-		<>
+		<div className="absolute top-0 pointer-events-none w-screen h-screen overflow-hidden">
 			<div className="absolute -top-[540px] -left-[544px]">
 				<Image
 					src={"/ellipse-purple.png"}
@@ -19,7 +20,7 @@ const BgEllipseSvgs = () => {
 					alt="Ellipse"
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 
