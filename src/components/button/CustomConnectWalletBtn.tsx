@@ -3,6 +3,7 @@
 // Rainbowkit
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
+import { FaAngleDown, FaWallet } from "react-icons/fa6";
 
 // Icons
 import { PiWallet } from "react-icons/pi";
@@ -22,7 +23,7 @@ const CustomConnectWalletBtn = () => (
 
 			return (
 				<div
-					className="" // Let's wait Kraken's magic
+					className="flex items-center h-full text-primary" // Let's wait Kraken's magic
 					onClick={openConnectModal}
 					{...(!ready && {
 						"aria-hidden": true,
@@ -62,28 +63,24 @@ const CustomConnectWalletBtn = () => (
 
 						// Connected & no error
 						return (
-							<div className="flex items-center gap-x-2">
+							<div className={`h-11 flex items-center gap-x-2`}>
 								<button
-									className="flex items-center"
+									className="h-full flex items-center gap-x-2 bg-grayBg px-2 lg:px-4 py-1 lg:py-2 rounded-lg border border-light/10 transition-all duration-300 ease-in-out hover:bg-primary/20 hover:border-primary"
 									onClick={openChainModal}
 									type="button"
 								>
 									{chain.hasIcon && (
 										<div
+											className={`overflow-hidden rounded-full`}
 											style={{
 												background:
 													chain.iconBackground,
-												width: 12,
-												height: 12,
-												borderRadius: 999,
-												overflow: "hidden",
-												marginRight: 4,
 											}}
 										>
 											{chain.iconUrl && (
 												<Image
-													width={12}
-													height={12}
+													width={24}
+													height={24}
 													alt={
 														chain.name ??
 														"Chain icon"
@@ -93,16 +90,29 @@ const CustomConnectWalletBtn = () => (
 											)}
 										</div>
 									)}
-									{chain.name}
+									<div className="hidden lg:block w-16 truncate text-ellipsis">
+										{chain.name}
+									</div>
+									<div className="hidden lg:block text-lg">
+										<FaAngleDown />
+									</div>
 								</button>
 								<button
+									className="h-full flex items-center gap-x-2 bg-grayBg px-2 lg:px-4 py-1 lg:py-2 rounded-lg border border-light/10 transition-all duration-300 ease-in-out hover:bg-primary/20 hover:border-primary"
 									onClick={openAccountModal}
 									type="button"
 								>
-									{account.displayName}
-									{account.displayBalance
-										? ` (${account.displayBalance})`
-										: ""}
+									<div className="text-2xl">
+										<FaWallet />
+									</div>
+									<div className="hidden lg:flex items-center gap-x-1">
+										<div className="">
+											{account.displayName}
+										</div>
+										<div className="text-lg">
+											<FaAngleDown />
+										</div>
+									</div>
 								</button>
 							</div>
 						);

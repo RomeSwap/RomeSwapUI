@@ -4,12 +4,16 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { neonMainnet } from "viem/chains";
+import { arbitrum, bsc, coreDao, mainnet, neonMainnet } from "viem/chains";
 
 const config = createConfig({
-	chains: [neonMainnet],
+	chains: [bsc, coreDao, mainnet, neonMainnet, arbitrum], // Added others chain to see icon cos unfortunately neon chain doesn't have 🤔
 	transports: {
+		[bsc.id]: http(),
+		[coreDao.id]: http(),
+		[mainnet.id]: http(),
 		[neonMainnet.id]: http(),
+		[arbitrum.id]: http(),
 	},
 });
 

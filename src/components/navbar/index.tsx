@@ -52,7 +52,7 @@ export default function Navbar() {
 	};
 
 	return (
-		<header className="fixed z-40 top-0 left-0 bg-black text-light w-full h-[70px] overflow-hidden">
+		<header className="fixed z-40 top-0 left-0 bg-black text-light w-full h-[65px] lg:h-[70px] overflow-hidden">
 			<nav className="relative flex items-center justify-between h-full max-w-[300px] md:max-w-2xl lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
 				<Link href={"/"}>
 					<div className="block lg:hidden">
