@@ -16,7 +16,7 @@ interface Props {
 	defaultToken?: Token;
 	isLoading: boolean;
 	onSelect: (token: Token) => void;
-	onChange: (e: unknown) => void;
+	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const SwapInputComponent: NextPage<Props> = ({
