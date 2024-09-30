@@ -1,4 +1,5 @@
-import { NextPage } from "next";
+"use client";
+
 import Image from "next/image";
 
 // Components
@@ -6,10 +7,10 @@ import TokenSelectorModal from "@/components/modals/TokenSelectorModal";
 
 // React icons
 import { FaAngleDown } from "react-icons/fa6";
+import { useState } from "react";
+import clsx from "clsx";
 
-interface Props {
-	modalHandler: () => void;
-	isSelectorOpen: boolean;
+interface SwapInputComponentProps {
 	token: Token;
 	tokens: Token[] | undefined;
 	amount: string;
@@ -17,11 +18,10 @@ interface Props {
 	isLoading: boolean;
 	onSelect: (token: Token) => void;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	customBg: string;
 }
 
-const SwapInputComponent: NextPage<Props> = ({
-	modalHandler,
-	isSelectorOpen,
+const SwapInputComponent = ({
 	onChange,
 	token,
 	tokens,
@@ -29,26 +29,31 @@ const SwapInputComponent: NextPage<Props> = ({
 	isLoading,
 	defaultToken,
 	onSelect,
-}) => {
+	customBg,
+}: SwapInputComponentProps) => {
+	const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+
+	const toggleSelector = () => setIsSelectorOpen(!isSelectorOpen);
+
 	return (
-		<div className="w-full flex flex-col bg-dark p-4 rounded-lg">
+		<div className={clsx("w-full flex flex-col p-4 rounded-lg", customBg)}>
 			<div className="flex flex-col gap-y-2">
 				<div className="flex items-center justify-between">
 					<button
 						className="flex items-center gap-x-2 bg-grayBg px-3 py-1.5 rounded-md"
 						type="button"
-						onClick={modalHandler}
+						onClick={toggleSelector}
 					>
-						<div className="">
+						{token.logoURI && (
 							<Image
-								src={token.logoURI!}
+								src={token.logoURI}
 								width={28}
 								height={28}
-								alt={token.symbol}
+								alt={`${token.symbol} logo`}
 							/>
-						</div>
+						)}
 						<div className="">{token.symbol}</div>
-						<div className="">
+						<div className="" aria-hidden="true">
 							<FaAngleDown />
 						</div>
 					</button>
@@ -68,6 +73,7 @@ const SwapInputComponent: NextPage<Props> = ({
 						placeholder="0.00"
 						value={amount}
 						onChange={onChange}
+						aria-label={`Enter amount of ${token.symbol}`}
 					/>
 					<div className="text-grayText text-xs text-end ">
 						~XXUSD
@@ -77,10 +83,13 @@ const SwapInputComponent: NextPage<Props> = ({
 			{isSelectorOpen && (
 				<TokenSelectorModal
 					defaultToken={defaultToken}
-					onClose={modalHandler}
-					tokens={tokens}
+					onClose={toggleSelector}
+					tokens={tokens || []}
 					isLoading={isLoading}
-					onSelect={onSelect}
+					onSelect={(selectedToken) => {
+						onSelect(selectedToken);
+						toggleSelector();
+					}}
 				/>
 			)}
 		</div>

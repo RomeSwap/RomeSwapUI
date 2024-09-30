@@ -1,31 +1,25 @@
-import { useState, useEffect } from "react";
 import { createPublicClient, http } from "viem";
 import { neonMainnet } from "viem/chains";
 
 const NEON_TOKEN_LIST_URL =
 	"https://raw.githubusercontent.com/neonlabsorg/token-list/main/tokenlist.json";
 
-export function useTokenList() {
-	const [tokens, setTokens] = useState<Token[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-
-	useEffect(() => {
-		async function fetchTokenList() {
-			try {
-				const response = await fetch(NEON_TOKEN_LIST_URL);
-				const data = await response.json();
-				setTokens(data.tokens);
-			} catch (error) {
-				console.error("Error fetching token list:", error);
-			} finally {
-				setIsLoading(false);
-			}
+export async function useTokenList(): Promise<Token[]> {
+	try {
+		const res = await fetch(NEON_TOKEN_LIST_URL, {
+			next: {
+				revalidate: 3600,
+			},
+		}); // Caching
+		if (!res.ok) {
+			throw new Error(`HTTP Error! status: ${res.status}`);
 		}
-
-		fetchTokenList();
-	}, []);
-
-	return { tokens, isLoading };
+		const data = await res.json();
+		return data.tokens as Token[];
+	} catch (error) {
+		console.error("Error fetching token list:", error);
+		return [];
+	}
 }
 
 // Create a viem public client for Neon chain

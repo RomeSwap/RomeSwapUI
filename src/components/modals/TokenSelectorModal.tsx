@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // Next
 import Image from "next/image";
@@ -36,11 +36,14 @@ const TokenSelectorModal = ({
 		}
 	}, [tokens, defaultToken]);
 
-	const filteredTokens = allTokens.filter(
-		(token) =>
-			token.name.toLowerCase().includes(search.toLowerCase()) ||
-			token.symbol.toLowerCase().includes(search.toLowerCase()),
-	);
+	const filteredTokens = useCallback(() => {
+		return allTokens.filter(
+			(token) =>
+				token.name.toLowerCase().includes(search.toLowerCase()) ||
+				token.symbol.toLowerCase().includes(search.toLowerCase()),
+		);
+	}, [allTokens, search]);
+
 	return (
 		<div className="absolute z-50 top-0 left-0 w-screen h-screen flex items-center justify-center">
 			<div
@@ -50,10 +53,17 @@ const TokenSelectorModal = ({
 			<div className="absolute bg-grayBg rounded-lg w-[90%] lg:w-[641px]">
 				<div className="flex items-center justify-between gap-x-5 p-4">
 					<div className="flex items-center gap-x-4">
-						<div className="text-3xl lg:text-4xl">
+						<label htmlFor="token-search" className="sr-only">
+							Search token
+						</label>
+						<div
+							className="text-3xl lg:text-4xl"
+							aria-hidden="true"
+						>
 							<IoSearchSharp />
 						</div>
 						<input
+							id="token-search"
 							className="bg-grayBg outline-none p-2"
 							type="search"
 							value={search}
@@ -64,6 +74,8 @@ const TokenSelectorModal = ({
 					<button
 						className="text-3xl lg:text-4xl text-grayText"
 						onClick={onClose}
+						aria-label="Close token selector"
+						type="button"
 					>
 						<GoXCircleFill />
 					</button>
@@ -72,7 +84,7 @@ const TokenSelectorModal = ({
 					{isLoading ? (
 						<div className="text-center">Loading tokens...</div>
 					) : allTokens.length > 0 ? (
-						filteredTokens.map((token, idx) => (
+						filteredTokens().map((token, idx) => (
 							<button
 								key={idx}
 								className="flex items-center justify-between w-full text-left p-2 hover:bg-grayText/30 rounded"
@@ -80,13 +92,16 @@ const TokenSelectorModal = ({
 							>
 								<div className="flex items-center gap-x-2">
 									<div className="ml-2 w-11 h-11">
-										<Image
-											className="w-full h-full"
-											src={token.logoURI!}
-											width={46}
-											height={46}
-											alt={token.name}
-										/>
+										{token.logoURI && (
+											<Image
+												className="w-full h-full"
+												src={token.logoURI}
+												// src={token.logoURI!}
+												width={46}
+												height={46}
+												alt={`${token.name} logo`}
+											/>
+										)}
 									</div>
 									<div className="flex flex-col ">
 										<div className="font-bold">
