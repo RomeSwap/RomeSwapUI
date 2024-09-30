@@ -32,7 +32,7 @@ const RainBowKitCustomProvider = ({
 						accentColor: "#15F096",
 						accentColorForeground: "#141721",
 						borderRadius: "medium",
-						fontStack: "inherit",
+						// fontStack:"inherit", Worked well but through type error
 						overlayBlur: "small",
 					})}
 					modalSize="compact"
