@@ -2,13 +2,21 @@
 
 // Rainbowkit
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import clsx from "clsx";
 import Image from "next/image";
+import React from "react";
 import { FaAngleDown, FaWallet } from "react-icons/fa6";
 
 // Icons
 import { PiWallet } from "react-icons/pi";
 
-const CustomConnectWalletBtn = () => (
+type CustomConnectWalletBtnProps = {
+	className?: string; // Optional className prop
+};
+
+const CustomConnectWalletBtn: React.FC<CustomConnectWalletBtnProps> = ({
+	className,
+}) => (
 	<ConnectButton.Custom>
 		{({
 			account,
@@ -23,7 +31,10 @@ const CustomConnectWalletBtn = () => (
 
 			return (
 				<div
-					className="flex items-center h-full text-primary" // Let's wait Kraken's magic
+					className={clsx(
+						"flex items-center h-full text-primary",
+						className,
+					)} // Let's wait Kraken's magic
 					onClick={openConnectModal}
 					{...(!ready && {
 						"aria-hidden": true,
@@ -35,7 +46,7 @@ const CustomConnectWalletBtn = () => (
 						if (!connected) {
 							return (
 								<button
-									className="flex items-center gap-x-2 xl:gap-x-4 bg-primary text-black text-sm font-semibold py-2 px-4 lg:px-6 rounded-full transition-all duration-300 ease-in-out border border-transparent hover:border-primary"
+									className="w-full flex items-center justify-center gap-x-2 xl:gap-x-4 bg-primary text-black text-sm font-semibold py-2 px-4 lg:px-6 rounded-lg transition-all duration-300 ease-in-out border border-transparent hover:border-primary"
 									onClick={openConnectModal}
 									type="button"
 								>
@@ -65,7 +76,7 @@ const CustomConnectWalletBtn = () => (
 						return (
 							<div className={`h-11 flex items-center gap-x-2`}>
 								<button
-									className="h-full flex items-center gap-x-2 bg-grayBg px-2 lg:px-4 py-1 lg:py-2 rounded-lg border border-light/10 transition-all duration-300 ease-in-out hover:bg-primary/20 hover:border-primary"
+									className="w-full h-full flex items-center gap-x-2 bg-grayBg px-2 lg:px-4 py-1 lg:py-2 rounded-lg border border-light/10 transition-all duration-300 ease-in-out hover:bg-primary/20 hover:border-primary"
 									onClick={openChainModal}
 									type="button"
 								>
@@ -98,7 +109,7 @@ const CustomConnectWalletBtn = () => (
 									</div>
 								</button>
 								<button
-									className="h-full flex items-center gap-x-2 bg-grayBg px-2 lg:px-4 py-1 lg:py-2 rounded-lg border border-light/10 transition-all duration-300 ease-in-out hover:bg-primary/20 hover:border-primary"
+									className="w-full h-full flex items-center gap-x-2 bg-grayBg px-2 lg:px-4 py-1 lg:py-2 rounded-lg border border-light/10 transition-all duration-300 ease-in-out hover:bg-primary/20 hover:border-primary"
 									onClick={openAccountModal}
 									type="button"
 								>

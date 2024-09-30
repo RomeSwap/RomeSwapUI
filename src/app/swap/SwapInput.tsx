@@ -2,15 +2,12 @@
 
 import React, { useState } from "react";
 
-// Web3
-import { useAccount } from "wagmi";
-
 // Components
-import CustomConnectWalletBtn from "@/components/button/CustomConnectWalletBtn";
+import SwapInputComponent from "@/components/input/SwapInputComponent";
+import SwapBtn from "@/components/button/SwapBtn";
 
 // Libs
 import { useTokenList } from "@/libs/useTokenList";
-import SwapInputComponent from "@/components/input/SwapInputComponent";
 
 const SwapInput = () => {
 	// Modals
@@ -22,8 +19,6 @@ const SwapInput = () => {
 	const handleOutputModal = () => {
 		setIsOutputSelectorOpen(!isOutputSelectorOpen);
 	};
-	// Check if MM wallet is connected
-	const { isConnected } = useAccount();
 
 	const defaultInputToken = {
 		chainId: 245022939,
@@ -53,19 +48,6 @@ const SwapInput = () => {
 
 	const { tokens, isLoading } = useTokenList();
 
-	if (!isConnected) {
-		return <p>Wallet not connected</p>;
-	}
-
-	const handleSwap = () => {
-		// Implement swap logic here
-		console.log("Swap", {
-			inputAmount,
-			outputAmount,
-			inputToken,
-			outputToken,
-		});
-	};
 	return (
 		<>
 			{/* Output */}
@@ -98,19 +80,7 @@ const SwapInput = () => {
 				defaultToken={defaultOutputToken}
 				onChange={(e) => setOutputAmount(e.target.value)}
 			/>
-
-			{/* Swap button */}
-			{isConnected ? (
-				<button
-					className="w-full text-center bg-primary font-semibold text-dark py-2 lg:py-3 rounded-lg"
-					type="button"
-					onClick={handleSwap}
-				>
-					Swap
-				</button>
-			) : (
-				<CustomConnectWalletBtn />
-			)}
+			<SwapBtn />
 		</>
 	);
 };
