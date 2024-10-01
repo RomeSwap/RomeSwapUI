@@ -27,25 +27,22 @@ export default function Navbar() {
 	};
 
 	const currentLinkMobile = () => {
-		if (pathname == "/") {
+		const activeLink = navLinksData.find((link) => isLinkActive(link.href));
+
+		if (activeLink) {
 			return (
 				<>
-					<span className="">
-						<IoHome />
-					</span>
-					<span>Home</span>
-				</>
-			);
-		} else if (pathname == "/swap") {
-			return (
-				<>
-					<span className="">
-						<IoSwapHorizontal />
-					</span>
-					<span>Swap</span>
+					<span>{activeLink.icon}</span>
+					<span>{activeLink.name}</span>
 				</>
 			);
 		}
+		return (
+			<>
+				<IoHome />
+				<span>Home</span>
+			</>
+		);
 	};
 
 	const toggleMobileDropdown = () => {
@@ -53,7 +50,7 @@ export default function Navbar() {
 	};
 
 	return (
-		<header className="fixed z-40 top-0 left-0 bg-black text-light w-full h-[65px] lg:h-[70px] overflow-hidden">
+		<header className="fixed z-40 top-0 left-0 bg-black text-light w-full h-[65px] lg:h-[70px] lg:overflow-hidden">
 			<nav className="relative flex items-center justify-between h-full max-w-[300px] md:max-w-2xl lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
 				<Link href={"/"}>
 					<div className="block lg:hidden">
@@ -84,7 +81,8 @@ export default function Navbar() {
 						</div>
 					</button>
 					{isMobileMenuActive && (
-						<div className="absolute top-10 left-0 w-full bg-dark rounded-b-lg">
+						// asks Kraken bout design
+						<div className="absolute top-16 left-0 w-48 bg-dark rounded-lg border border-primary/40 ">
 							{navLinksData.map((link, idx) => {
 								return (
 									<Link
