@@ -142,22 +142,8 @@ export default function Navbar() {
 				<CustomConnectWalletBtn />
 			</nav>
 			<div className="relative select-none pointer-events-none z-0 w-full h-full">
-				<div className="absolute -top-[520px] -left-[264px]">
-					<Image
-						src={"/ellipse-green.png"}
-						width={900}
-						height={900}
-						alt="Ellipse"
-					/>
-				</div>
-				<div className="absolute -top-[700px] -right-[364px]">
-					<Image
-						src={"/ellipse-purple.png"}
-						width={1200}
-						height={1200}
-						alt="Ellipse"
-					/>
-				</div>
+				<div className="absolute bottom-12 -left-36 w-[600px] h-[600px] bg-[rgba(20,241,149,0.24)] rounded-full blur-[200px]"></div>
+				<div className="absolute -top-36 -right-44 w-[600px] h-[600px] bg-[rgba(99,57,249,0.25)] rounded-full blur-[200px]"></div>
 			</div>
 		</header>
 	);
