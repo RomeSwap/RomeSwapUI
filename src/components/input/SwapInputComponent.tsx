@@ -40,19 +40,22 @@ const SwapInputComponent = ({
 			<div className="flex flex-col gap-y-2">
 				<div className="flex items-center justify-between">
 					<button
-						className="flex items-center gap-x-2 bg-grayBg px-3 py-1.5 rounded-md"
+						className="flex items-center justify-between gap-x-2 bg-grayBg px-3 py-1.5 rounded-md h-[35px] w-28"
 						type="button"
 						onClick={toggleSelector}
 					>
-						{token.logoURI && (
-							<Image
-								src={token.logoURI}
-								width={28}
-								height={28}
-								alt={`${token.symbol} logo`}
-							/>
-						)}
-						<div className="">{token.symbol}</div>
+						<div className="w-full h-full flex items-center gap-x-2">
+							{token.logoURI && (
+								<Image
+									className="w-[21px] h-[21px]"
+									src={token.logoURI}
+									width={21}
+									height={21}
+									alt={`${token.symbol} logo`}
+								/>
+							)}
+							<div className="">{token.symbol}</div>
+						</div>
 						<div className="" aria-hidden="true">
 							<FaAngleDown />
 						</div>
