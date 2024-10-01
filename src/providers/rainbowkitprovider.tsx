@@ -1,12 +1,33 @@
 "use client";
 
 import "@rainbow-me/rainbowkit/styles.css";
-import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import {
+	connectorsForWallets,
+	darkTheme,
+	RainbowKitProvider,
+} from "@rainbow-me/rainbowkit";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { arbitrum, bsc, coreDao, mainnet, neonMainnet } from "viem/chains";
 
+// Wallets
+import {
+	metaMaskWallet,
+	coinbaseWallet,
+	walletConnectWallet,
+} from "@rainbow-me/rainbowkit/wallets";
+const connectors = connectorsForWallets(
+	[
+		{
+			groupName: "Suggested",
+			wallets: [metaMaskWallet, coinbaseWallet, walletConnectWallet],
+		},
+	],
+	{ appName: "RainbowKit App", projectId: "YOUR_PROJECT_ID" },
+);
+
 const config = createConfig({
+	connectors,
 	chains: [bsc, coreDao, mainnet, neonMainnet, arbitrum], // Added others chain to see icon cos unfortunately neon chain doesn't have 🤔
 	transports: {
 		[bsc.id]: http(),
@@ -35,7 +56,6 @@ const RainBowKitCustomProvider = ({
 						// fontStack:"inherit", Worked well but through type error
 						overlayBlur: "small",
 					})}
-					modalSize="compact"
 				>
 					{children}
 				</RainbowKitProvider>
