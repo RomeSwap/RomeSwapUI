@@ -106,9 +106,9 @@ export default function SwapClient({
 					onChange={handleInputAmountChange}
 				/>
 				{/* Swap tokens button */}
-				<div className="flex justify-center items-center h-1.5 w-full relative">
+				<div className="flex justify-end lg:justify-center items-center h-1.5 w-full relative">
 					<button
-						className="absolute -top-6 flex items-center justify-center w-[51px] h-[51px] rounded-full border-4 border-grayBg bg-secondary text-light text-2xl"
+						className="absolute -top-6 right-1.5 lg:right-auto flex items-center justify-center w-[51px] h-[51px] rounded-full border-4 border-grayBg bg-secondary text-light text-2xl"
 						onClick={() => {
 							const temp = inputToken;
 							setInputToken(outputToken || defaultOutputToken);
