@@ -19,15 +19,8 @@ import clsx from "clsx";
 export default function Navbar() {
 	// States
 	const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
-	const [currentPath, setCurrentPath] = useState<string | null>(null);
 
 	const pathname = usePathname();
-
-	useEffect(() => {
-		if (typeof window !== "undefined") {
-			setCurrentPath(window.location.pathname);
-		}
-	}, []);
 
 	const isLinkActive = (link: string) => {
 		return pathname === link || pathname.startsWith(`${link}/`);
