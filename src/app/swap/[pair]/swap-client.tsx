@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 // Libs
 import { defaultInputToken, defaultOutputToken } from "@/libs/defaultToken";
 
+// Components
+import SlippageSettingsModal from "@/components/modals/SlippageSettingsModal";
+
 // Icons
 import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
 import SwapInputComponent from "@/components/input/SwapInputComponent";
@@ -21,6 +24,8 @@ export default function SwapClient({
 	initialTokens: Token[];
 }) {
 	const router = useRouter();
+	const [isSlippage, setIsSlippage] = useState(false);
+
 	const [inputAmount, setInputAmount] = useState("");
 	const [outputAmount, setOutputAmount] = useState("");
 
@@ -89,11 +94,21 @@ export default function SwapClient({
 							<FaArrowRotateLeft />
 						</span>
 					</button>
-					<button type="button" className=" text-4xl text-light">
+					<button
+						type="button"
+						className=" text-4xl text-light"
+						aria-label="Open slippage settings"
+						onClick={() => setIsSlippage(true)}
+					>
 						<span className="text-[32px]">
 							<FaGear />
 						</span>
 					</button>
+					{isSlippage && (
+						<SlippageSettingsModal
+							onClose={() => setIsSlippage(false)}
+						/>
+					)}
 				</div>
 				<SwapInputComponent
 					customBg="bg-dark"
