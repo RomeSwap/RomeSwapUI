@@ -15,7 +15,7 @@ const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
 }) => {
 	const slippagePercentages = [0.1, 0.5, 1];
 	const maxSlippageAllowed = 49;
-	const [slippage, setSlippage] = useState(1);
+	const [slippage, setSlippage] = useState<number | null>(1);
 	const [warningMsg, setWarningMsg] = useState<string | null>(null);
 
 	const isSlippageActive = (percentage: number) => {
@@ -24,17 +24,30 @@ const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
 		}
 	};
 
+	const handleSlippageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = parseFloat(e.target.value);
+		setSlippage(isNaN(value) ? null : value); // If the input is empty, set slippage to null
+	};
+
 	useEffect(() => {
-		if (slippage <= 0.1) {
+		if (slippage === null) {
+			setWarningMsg("Slippage cannot be empty.");
+		} else if (slippage <= 0.1) {
 			setWarningMsg("Your transaction may fall");
-		} else if (slippage > maxSlippageAllowed) {
+		} else if (slippage > 10 && slippage <= maxSlippageAllowed) {
 			setWarningMsg(
 				"Your transaction may be frontrun and result in an unfavorable trade",
+			);
+		} else if (slippage > maxSlippageAllowed) {
+			setWarningMsg(
+				"Slippage too high, exceeding the maximum allowed limit",
 			);
 		} else {
 			setWarningMsg(null);
 		}
 	}, [slippage]);
+
+	const isButtonDisabled = slippage === null || slippage > maxSlippageAllowed;
 
 	return (
 		<div className="z-50 absolute top-0 right-0 w-full h-full flex items-center justify-center">
@@ -84,14 +97,12 @@ const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
 							<div className="">Custom</div>
 							<div className="flex items-center">
 								<input
-									className="bg-background w-16 text-end py-1 rounded-md outline-none border border-transparent focus:border-primary pr-1"
+									className="bg-background w-16 text-end py-1 rounded-md outline-none border border-transparent focus:border-primary pr-1 appearance-none"
 									type="number"
 									max={maxSlippageAllowed}
 									min={0}
-									value={slippage}
-									onChange={(e) =>
-										setSlippage(parseFloat(e.target.value))
-									}
+									value={slippage ?? ""}
+									onChange={handleSlippageChange}
 									placeholder={slippage as unknown as string}
 								/>
 								<div>%</div>
@@ -108,13 +119,24 @@ const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
 					)}
 					{/* Save  */}
 					<button
-						className="w-full bg-primary rounded-md py-2 text-background font-semibold"
+						className={clsx(
+							"w-full bg-primary rounded-md py-2 text-background font-semibold transition-all duration-300 ease-in-out",
+							isButtonDisabled
+								? "bg-gray-400 cursor-not-allowed"
+								: warningMsg
+								? "bg-yellow-500 hover:bg-yellow-500/70"
+								: "bg-primary hover:bg-primary/70",
+						)}
 						type="button"
-						disabled={slippage === null ? true : false}
+						disabled={isButtonDisabled}
 						onClick={onClose} // For now just close the modal, will be changed to really change the slippage
 						aria-label={`Save slippage to ${slippage}%`}
 					>
-						{warningMsg ? "Save Anyway" : "Save Slippage"}
+						{slippage === null
+							? warningMsg
+								? "Save Slippage"
+								: "Save Anyway"
+							: "Save Slippage"}
 					</button>
 				</div>
 			</div>
