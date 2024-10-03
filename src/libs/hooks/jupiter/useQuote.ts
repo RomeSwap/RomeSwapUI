@@ -9,24 +9,24 @@ interface QuoteArgs {
   outputMint: NotEVMAddress<string>;
   amount: number;
   slippageBps: number;
-  enabled: boolean
+  enabled: boolean;
 }
 
-export const jupiterQuoteApi = createJupiterApiClient();
+export const jupiterApiClient = createJupiterApiClient();
 
 export function useQuote({
   inputMint,
   outputMint,
   amount,
   slippageBps,
-  enabled
+  enabled,
 }: QuoteArgs) {
   return useQuery({
     refetchInterval: 5000,
     enabled,
     queryKey: ["jupiterQuote", inputMint, outputMint, amount, slippageBps],
     queryFn: () =>
-      jupiterQuoteApi.quoteGet({
+      jupiterApiClient.quoteGet({
         inputMint,
         outputMint,
         amount,

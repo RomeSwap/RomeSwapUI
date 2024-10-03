@@ -7,104 +7,104 @@ import { useState } from "react";
 import clsx from "clsx";
 
 interface SwapInputComponentProps {
-	token: Token;
-	tokens: Token[] | undefined;
-	amount: number;
-	defaultToken?: Token;
-	isLoading: boolean;
-	onSelect: (token: Token) => void;
-	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	customBg: string;
-    readOnly?: boolean
+  token: Token;
+  tokens: Token[] | undefined;
+  amount: number;
+  defaultToken?: Token;
+  isLoading: boolean;
+  onSelect: (token: Token) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  customBg: string;
+  readOnly?: boolean;
+  balance?: number;
 }
 
 const DEFAULT_LOGO_URI =
-	"https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
 
 const SwapInputComponent = ({
-	onChange,
-	token,
-	tokens,
-	amount,
-	isLoading,
-	defaultToken,
-	onSelect,
-	customBg,
-    readOnly
+  onChange,
+  token,
+  tokens,
+  amount,
+  isLoading,
+  defaultToken,
+  onSelect,
+  customBg,
+  readOnly,
+  balance
 }: SwapInputComponentProps) => {
-	const [imageError, setImageError] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-	const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
-	const toggleSelector = () => setIsSelectorOpen(!isSelectorOpen);
+  const toggleSelector = () => setIsSelectorOpen(!isSelectorOpen);
 
-	return (
-		<div className={clsx("w-full flex flex-col p-4 rounded-lg", customBg)}>
-			<div className="flex flex-col gap-y-2">
-				<div className="flex items-center justify-between">
-					<button
-						className="flex items-center justify-between gap-x-2 bg-grayBg px-3 py-1.5 rounded-md h-[35px] w-32"
-						type="button"
-						onClick={toggleSelector}
-					>
-						<div className="w-full h-full flex items-center gap-x-2">
-							{token.logoURI && (
-								<Image
-									className="w-[21px] h-[21px]"
-									src={
-										imageError || !token.logoURI
-											? DEFAULT_LOGO_URI
-											: token.logoURI
-									}
-									// src={token.logoURI}
-									width={21}
-									height={21}
-									alt={`${token.symbol} logo`}
-									onError={() => setImageError(true)}
-								/>
-							)}
-							<div className="">{token.symbol}</div>
-						</div>
-						<div className="" aria-hidden="true">
-							<FaAngleDown />
-						</div>
-					</button>
-					<div className="text-xs text-grayText">
-						<div className="">Balance</div>
-						<div className="">XX</div>
-						<button type="button">MAX</button>
-					</div>
-				</div>
-				<div className="flex items-center justify-between">
-					<input
-						type="number"
-						min={0}
-						className="p-2 w-full bg-transparent text-2xl placeholder:text-light/30 outline-none appearance-none"
-						placeholder="0.00"
-						value={amount}
-						onChange={onChange}
-						aria-label={`Enter amount of ${token.symbol}`}
-                        readOnly={readOnly ?? false}
-					/>
-					<div className="text-grayText text-xs text-end ">
-						~XXUSD
-					</div>
-				</div>
-			</div>
-			{isSelectorOpen && (
-				<TokenSelectorModal
-					defaultToken={defaultToken}
-					onClose={toggleSelector}
-					tokens={tokens || []}
-					isLoading={isLoading}
-					onSelect={(selectedToken) => {
-						onSelect(selectedToken);
-						toggleSelector();
-					}}
-				/>
-			)}
-		</div>
-	);
+  return (
+    <div className={clsx("w-full flex flex-col p-4 rounded-lg", customBg)}>
+      <div className="flex flex-col gap-y-2">
+        <div className="flex items-center justify-between">
+          <button
+            className="flex items-center justify-between gap-x-2 bg-grayBg px-3 py-1.5 rounded-md h-[35px] w-32"
+            type="button"
+            onClick={toggleSelector}
+          >
+            <div className="w-full h-full flex items-center gap-x-2">
+              {token.logoURI && (
+                <Image
+                  className="w-[21px] h-[21px]"
+                  src={
+                    imageError || !token.logoURI
+                      ? DEFAULT_LOGO_URI
+                      : token.logoURI
+                  }
+                  // src={token.logoURI}
+                  width={21}
+                  height={21}
+                  alt={`${token.symbol} logo`}
+                  onError={() => setImageError(true)}
+                />
+              )}
+              <div className="">{token.symbol}</div>
+            </div>
+            <div className="" aria-hidden="true">
+              <FaAngleDown />
+            </div>
+          </button>
+          <div className="text-xs text-grayText">
+            <div className="">Balance</div>
+            <div className="">{balance}</div>
+            <button type="button">MAX</button>
+          </div>
+        </div>
+        <div className="flex items-center justify-between">
+          <input
+            type="number"
+            min={0}
+            className="p-2 w-full bg-transparent text-2xl placeholder:text-light/30 outline-none appearance-none"
+            placeholder="0.00"
+            value={amount}
+            onChange={onChange}
+            aria-label={`Enter amount of ${token.symbol}`}
+            readOnly={readOnly ?? false}
+          />
+          <div className="text-grayText text-xs text-end ">~XXUSD</div>
+        </div>
+      </div>
+      {isSelectorOpen && (
+        <TokenSelectorModal
+          defaultToken={defaultToken}
+          onClose={toggleSelector}
+          tokens={tokens || []}
+          isLoading={isLoading}
+          onSelect={(selectedToken) => {
+            onSelect(selectedToken);
+            toggleSelector();
+          }}
+        />
+      )}
+    </div>
+  );
 };
 
 export default SwapInputComponent;
