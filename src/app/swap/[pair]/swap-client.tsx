@@ -31,10 +31,10 @@ export default function SwapClient({
 
     const {address} = useAccount()
 
-    const {data: inputNeonAddress, isError: isInputError, error: inputError} = useGetSPL(inputToken.address_spl)
-    const {data: outputNeonAddress, isError: isOutputError, error: outputError} = useGetSPL(outputToken.address_spl)
+    const {data: inputNeonAddress, isError: isInputError, error: inputError} = useGetSPL(inputToken.address)
+    const {data: outputNeonAddress, isError: isOutputError, error: outputError} = useGetSPL(outputToken.address)
 
-    const { data: quote, isPending } = useQuote({inputMint: inputToken.address_spl, outputMint: outputToken.address_spl, amount: (inputAmount * (10 ** inputToken.decimals)), slippageBps: 5, enabled: inputAmount != 0})
+    const { data: quote, isPending } = useQuote({inputMint: inputToken.address, outputMint: outputToken.address, amount: (inputAmount * (10 ** inputToken.decimals)), slippageBps: 5, enabled: inputAmount != 0})
     const {data: swapInstructions, isError: isSwapInstructionsError, error: swapInstructionsError} = useSwapInstructions(quote!, outputNeonAddress!, address!, quote != undefined && outputNeonAddress != undefined && address!=undefined)
 
 

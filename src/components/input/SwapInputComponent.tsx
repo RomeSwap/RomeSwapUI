@@ -18,6 +18,9 @@ interface SwapInputComponentProps {
     readOnly?: boolean
 }
 
+const DEFAULT_LOGO_URI =
+	"https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
 const SwapInputComponent = ({
 	onChange,
 	token,
@@ -29,6 +32,8 @@ const SwapInputComponent = ({
 	customBg,
     readOnly
 }: SwapInputComponentProps) => {
+	const [imageError, setImageError] = useState(false);
+
 	const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
 	const toggleSelector = () => setIsSelectorOpen(!isSelectorOpen);
@@ -46,10 +51,16 @@ const SwapInputComponent = ({
 							{token.logoURI && (
 								<Image
 									className="w-[21px] h-[21px]"
-									src={token.logoURI}
+									src={
+										imageError || !token.logoURI
+											? DEFAULT_LOGO_URI
+											: token.logoURI
+									}
+									// src={token.logoURI}
 									width={21}
 									height={21}
 									alt={`${token.symbol} logo`}
+									onError={() => setImageError(true)}
 								/>
 							)}
 							<div className="">{token.symbol}</div>
@@ -60,9 +71,7 @@ const SwapInputComponent = ({
 					</button>
 					<div className="text-xs text-grayText">
 						<div className="">Balance</div>
-						<div className="">
-							{/* {balanceData?.value} {balanceData?.symbol} */}
-						</div>
+						<div className="">XX</div>
 						<button type="button">MAX</button>
 					</div>
 				</div>

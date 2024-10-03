@@ -8,9 +8,8 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { arbitrum, bsc, coreDao, mainnet, neonMainnet } from "viem/chains";
+import { neonMainnet } from "viem/chains";
 
-// Wallets
 import {
 	metaMaskWallet,
 	coinbaseWallet,
@@ -29,7 +28,7 @@ const connectors = connectorsForWallets(
 
 const config = createConfig({
 	connectors,
-	chains: [neonMainnet], // Added others chain to see icon cos unfortunately neon chain doesn't have 🤔
+	chains: [neonMainnet],
 	transports: {
 		[neonMainnet.id]: http(),
 	},
@@ -50,7 +49,6 @@ const RainBowKitCustomProvider = ({
 						accentColor: "#15F096",
 						accentColorForeground: "#141721",
 						borderRadius: "medium",
-						// fontStack:"inherit", Worked well but through type error
 						overlayBlur: "small",
 					})}
 				>
