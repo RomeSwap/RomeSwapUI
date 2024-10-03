@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import SwapClient from "./swap-client";
 
-export default function SwapDefaultPage() {
-	redirect("/swap/SOL-USDC");
+export default async function SwapPage() {
+	return <SwapClient />;
 }
