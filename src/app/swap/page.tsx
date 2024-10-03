@@ -1,5 +1,11 @@
+"use client";
+import { Suspense } from "react";
 import SwapClient from "./swap-client";
 
 export default function SwapPage() {
-	return <SwapClient />;
+	return (
+		<Suspense>
+			<SwapClient />
+		</Suspense>
+	);
 }
