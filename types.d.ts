@@ -1,10 +1,28 @@
-type Token = {
+interface JupiterToken {
+	chainId: number;
 	address: string;
 	symbol: string;
 	name: string;
 	decimals: number;
 	logoURI: string;
-};
+}
+
+interface JupiterTokenList {
+	name: string;
+	logoURI: string;
+	keywords: string[];
+	tags: Record<string, { name: string; description: string }>;
+	timestamp: string;
+	tokens: JupiterToken[];
+}
+
+interface Token {
+	address: string;
+	symbol: string;
+	name: string;
+	decimals: number;
+	logoURI: string;
+}
 
 interface TokenSelectorModalProps {
 	tokens: Token[] | undefined;

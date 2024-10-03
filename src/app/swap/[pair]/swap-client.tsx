@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 // Next
@@ -6,6 +7,7 @@ import { useEffect, useState } from "react";
 
 // Libs
 import { defaultInputToken, defaultOutputToken } from "@/libs/defaultToken";
+import { getTokenList } from "@/libs/tokens";
 
 // Components
 import SlippageSettingsModal from "@/components/modals/SlippageSettingsModal";
@@ -24,7 +26,7 @@ export default function SwapClient({
 	initialTokens: Token[];
 }) {
 	const router = useRouter();
-	const [isSlippage, setIsSlippage] = useState(false);
+	const [tokens, setTokens] = useState<Token[]>(initialTokens);
 
 	const [inputAmount, setInputAmount] = useState("");
 	const [outputAmount, setOutputAmount] = useState("");
@@ -32,10 +34,31 @@ export default function SwapClient({
 	const [inputToken, setInputToken] = useState<Token>(defaultInputToken);
 	const [outputToken, setOutputToken] = useState<Token>(defaultOutputToken);
 
-	const [tokens, setTokens] = useState<Token[]>(initialTokens);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	const [isSlippage, setIsSlippage] = useState(false);
 
 	useEffect(() => {
-		if (tokens && tokens.length > 0) {
+		async function fetchTokens() {
+			try {
+				const fetchedTokens = await getTokenList();
+				setTokens([defaultInputToken, ...fetchedTokens]);
+				setIsLoading(false);
+			} catch (err) {
+				console.error("Error fetching token list:", err);
+				setError(
+					"Failed to load tokens from comp. Please try again later.",
+				);
+				setIsLoading(false);
+			}
+		}
+
+		fetchTokens();
+	}, []);
+
+	useEffect(() => {
+		if (tokens.length > 0) {
 			const [inputSymbol, outputSymbol] = initialPair.split("-");
 			const foundInputToken =
 				tokens.find((t) => t.symbol === inputSymbol) ||
@@ -78,8 +101,12 @@ export default function SwapClient({
 		setInputAmount(e.target.value); // same value as the input for now
 	};
 
-	if (!tokens || tokens.length === 0) {
+	if (isLoading) {
 		return <div>Loading tokens...</div>;
+	}
+
+	if (error) {
+		return <div>{error}</div>;
 	}
 
 	return (
