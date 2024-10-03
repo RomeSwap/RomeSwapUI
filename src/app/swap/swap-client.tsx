@@ -1,29 +1,28 @@
 "use client";
 
-// Next
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-// Libs
+import { abi as ICSJupiterSwapAbi } from "@/libs/hooks/neon/ICSJupiterSwap";
 import { defaultInputToken, defaultOutputToken } from "@/libs/defaultToken";
 import { getTokenList } from "@/libs/tokens";
-
-// Components
 import SlippageSettingsModal from "@/components/modals/SlippageSettingsModal";
-
-// Icons
 import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
 import SwapInputComponent from "@/components/input/SwapInputComponent";
 import SwapBtn from "@/components/button/SwapBtn";
 import { PiArrowsDownUpBold } from "react-icons/pi";
+import { useAccount, useWriteContract } from "wagmi";
+import { useQuote } from "@/libs/hooks/jupiter/useQuote";
+import useGetSPL, { publicKeyToBytes32 } from "@/libs/hooks/neon/useGetSPL";
+import { ICSFlowMainnet, prepareInstructionAccounts, prepareInstructionData, useSwapInstructions } from "@/libs/hooks/jupiter/useSwap";
+import { Transaction } from "@solana/web3.js";
 
 export default function SwapClient() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [tokens, setTokens] = useState<Token[]>([]);
 
-	const [inputAmount, setInputAmount] = useState("");
-	const [outputAmount, setOutputAmount] = useState("");
+	const [inputAmount, setInputAmount] = useState(0);
+	const [outputAmount, setOutputAmount] = useState(0);
 
 	const [inputToken, setInputToken] = useState<Token>(defaultInputToken);
 	const [outputToken, setOutputToken] = useState<Token>(defaultOutputToken);
@@ -75,28 +74,82 @@ export default function SwapClient() {
 		router.push(`/swap?${params.toString()}`);
 	}, [inputToken, outputToken, router]);
 
+    const {address} = useAccount()
+
+    const {data: inputNeonAddress, isError: isInputError, error: inputError} = useGetSPL(inputToken.address)
+    const {data: outputNeonAddress, isError: isOutputError, error: outputError} = useGetSPL(outputToken.address)
+
+    const { data: quote, isPending } = useQuote({inputMint: inputToken.address, outputMint: outputToken.address, amount: (inputAmount * (10 ** inputToken.decimals)), slippageBps: 5, enabled: inputAmount != 0})
+    const {data: swapInstructions, isError: isSwapInstructionsError, error: swapInstructionsError} = useSwapInstructions(quote!, outputNeonAddress!, address!, quote != undefined && outputNeonAddress != undefined && address!=undefined)
+
+
+    const {writeContract, error: contractError, isError: isContractError } = useWriteContract()
+
+    useEffect(() => {
+        if (contractError) {
+            console.log(contractError)
+        }
+    }, [contractError, isContractError])
+
 	const handleSwap = () => {
-		// Console log for now
-		console.log("Swap", {
-			inputAmount,
-			outputAmount,
-			inputToken,
-			outputToken,
-		});
-	};
+        console.log("swap")
+        if (isInputError) {
+            console.log(inputError)
+            return
+        }
+
+        if (isOutputError) {
+            console.log(outputError)
+            return
+        }
+
+        if (isSwapInstructionsError) {
+            console.log(swapInstructionsError)
+            return
+        }
+
+        console.log(inputNeonAddress)
+        console.log(outputNeonAddress)
+
+        if (quote != undefined && !isPending && inputNeonAddress != undefined && outputNeonAddress != undefined && address != undefined) {
+            /*
+            writeContract({
+                abi: abi,
+                address: inputNeonAddress,
+                functionName: 'approve',
+                args: ["ICSFlowMainnet", BigInt(inputAmount)]
+            })
+            */
+            if (swapInstructions != undefined){
+                const swapTransactionBuf = Buffer.from(swapInstructions, 'base64')
+                const transaction =Transaction.from(swapTransactionBuf)
+                const instruction = transaction.instructions[transaction.instructions.length - 1]
+                console.log("instruction: ", instruction)
+
+                console.log(instruction.programId)
+                const programIdPubKey = publicKeyToBytes32(instruction.programId.toBase58())
+                console.log(`programId: ${programIdPubKey}`)
+
+                const instructionsData = prepareInstructionData(instruction.data)
+                console.log(instructionsData)
+
+                const accountsData = prepareInstructionAccounts(instruction.keys)
+                console.log(accountsData)
+
+                writeContract({
+                    abi: ICSJupiterSwapAbi,
+                    address: ICSFlowMainnet,
+                    functionName: 'jupiterSwap',
+                    args: [inputNeonAddress, outputNeonAddress, BigInt(inputAmount * (10 ** inputToken.decimals)), programIdPubKey, instructionsData, accountsData]
+                })
+            }
+        }
+    };
 
 	const handleInputAmountChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
 	) => {
-		setInputAmount(e.target.value);
-		setOutputAmount(e.target.value); // same value as the input for now
-	};
-
-	const handleOutputAmountChange = (
-		e: React.ChangeEvent<HTMLInputElement>,
-	) => {
-		setOutputAmount(e.target.value);
-		setInputAmount(e.target.value); // same value as the input for now
+		setInputAmount(Number(e.target.value));
 	};
 
 	if (isLoading) {
@@ -167,11 +220,11 @@ export default function SwapClient() {
 				customBg="bg-lightGray mb-[34px]"
 				token={outputToken}
 				tokens={tokens}
-				amount={outputAmount}
+				amount={(Number(quote?.outAmount)?? 0) / (10**outputToken.decimals)}
 				isLoading={false}
 				onSelect={setOutputToken}
 				defaultToken={defaultOutputToken}
-				onChange={handleOutputAmountChange}
+                readOnly={true}
 			/>
 			<SwapBtn handleSwap={handleSwap} />
 		</div>
