@@ -31,3 +31,11 @@ interface TokenSelectorModalProps {
 	onSelect: (token: Token) => void;
 	defaultToken?: Token;
 }
+
+interface PriceData {
+	id: string;
+	mintSymbol: string;
+	vsToken: string;
+	vsTokenSymbol: string;
+	price: number;
+}

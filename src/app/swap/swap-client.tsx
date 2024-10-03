@@ -31,6 +31,11 @@ export default function SwapClient() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
+	const [inputTokenPrice, setInputTokenPrice] = useState<number | null>(null);
+	const [inputValueInUSDC, setInputValueInUSDC] = useState<string | null>(
+		null,
+	);
+
 	const [isSlippage, setIsSlippage] = useState(false);
 
 	useEffect(() => {
@@ -99,6 +104,38 @@ export default function SwapClient() {
 		setInputAmount(e.target.value); // same value as the input for now
 	};
 
+	useEffect(() => {
+		async function fetchPrice() {
+			try {
+				const response = await fetch(
+					`https://price.jup.ag/v6/price?ids=${inputToken.address}`,
+				);
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				const data = await response.json();
+				const priceData: PriceData = data.data[inputToken.address];
+				setInputTokenPrice(priceData.price);
+			} catch (error) {
+				console.error("Error fetching price:", error);
+				setInputTokenPrice(null);
+			}
+		}
+
+		if (inputToken) {
+			fetchPrice();
+		}
+	}, [inputToken]);
+
+	useEffect(() => {
+		if (inputTokenPrice !== null && inputAmount !== "") {
+			const valueInUSDC = parseFloat(inputAmount) * inputTokenPrice;
+			setInputValueInUSDC(valueInUSDC.toFixed(2));
+		} else {
+			setInputValueInUSDC(null);
+		}
+	}, [inputAmount, inputTokenPrice]);
+
 	if (isLoading) {
 		return <div>Loading tokens...</div>;
 	}
@@ -143,6 +180,7 @@ export default function SwapClient() {
 				onSelect={setInputToken}
 				defaultToken={defaultInputToken}
 				onChange={handleInputAmountChange}
+				valueInUSDC={inputValueInUSDC}
 			/>
 			{/* Swap tokens button */}
 			<div className="flex justify-end lg:justify-center items-center h-1.5 w-full relative">
@@ -172,6 +210,7 @@ export default function SwapClient() {
 				onSelect={setOutputToken}
 				defaultToken={defaultOutputToken}
 				onChange={handleOutputAmountChange}
+				valueInUSDC={inputValueInUSDC}
 			/>
 			<SwapBtn handleSwap={handleSwap} />
 		</div>

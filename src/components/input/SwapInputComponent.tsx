@@ -19,6 +19,7 @@ interface SwapInputComponentProps {
 	onSelect: (token: Token) => void;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	customBg: string;
+	valueInUSDC: string | null;
 }
 
 const DEFAULT_LOGO_URI =
@@ -33,6 +34,7 @@ const SwapInputComponent = ({
 	defaultToken,
 	onSelect,
 	customBg,
+	valueInUSDC,
 }: SwapInputComponentProps) => {
 	const [imageError, setImageError] = useState(false);
 
@@ -71,7 +73,7 @@ const SwapInputComponent = ({
 							<FaAngleDown />
 						</div>
 					</button>
-					<div className="text-xs text-grayText">
+					<div className="text-xs w-full flex flex-col items-end text-grayText">
 						<div className="">Balance</div>
 						<div className="">XX</div>
 						<button type="button">MAX</button>
@@ -87,9 +89,11 @@ const SwapInputComponent = ({
 						onChange={onChange}
 						aria-label={`Enter amount of ${token.symbol}`}
 					/>
-					<div className="text-grayText text-xs text-end ">
-						~XXUSD
-					</div>
+					{valueInUSDC && (
+						<div className="w-full text-grayText font-thin text-2xl text-end ">
+							~{valueInUSDC} USDC
+						</div>
+					)}
 				</div>
 			</div>
 			{isSelectorOpen && (
