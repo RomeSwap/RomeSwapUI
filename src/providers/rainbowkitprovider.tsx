@@ -28,13 +28,9 @@ const connectors = connectorsForWallets(
 
 const config = createConfig({
 	connectors,
-	chains: [bsc, coreDao, mainnet, neonMainnet, arbitrum], // Added others chain to see icon cos unfortunately neon chain doesn't have 🤔
+	chains: [neonMainnet],
 	transports: {
-		[bsc.id]: http(),
-		[coreDao.id]: http(),
-		[mainnet.id]: http(),
 		[neonMainnet.id]: http(),
-		[arbitrum.id]: http(),
 	},
 });
 
