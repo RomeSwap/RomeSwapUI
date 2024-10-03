@@ -1,17 +1,18 @@
 "use client";
 
-// Next
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-// Libs
 import { defaultInputToken, defaultOutputToken } from "@/libs/defaultToken";
-
-// Icons
 import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
 import SwapInputComponent from "@/components/input/SwapInputComponent";
 import SwapBtn from "@/components/button/SwapBtn";
 import { PiArrowsDownUpBold } from "react-icons/pi";
+import { useQuote } from "@/libs/hooks/jupiter/useQuote";
+import useGetSPL, { publicKeyToBytes32 } from "@/libs/hooks/neon/useGetSPL";
+import { prepareInstructionAccounts, prepareInstructionData, useSwapInstructions } from "@/libs/hooks/jupiter/useSwap";
+import { useAccount, useWriteContract } from "wagmi";
+import { abi } from "@/libs/hooks/neon/ERC20ForSPL";
+import { abi as ICSJupiterSwapAbi } from "@/libs/hooks/neon/ICSJupiterSwap";
 
 export default function SwapClient({
 	initialPair,
@@ -21,13 +22,22 @@ export default function SwapClient({
 	initialTokens: Token[];
 }) {
 	const router = useRouter();
-	const [inputAmount, setInputAmount] = useState("");
-	const [outputAmount, setOutputAmount] = useState("");
+	const [inputAmount, setInputAmount] = useState(0);
 
 	const [inputToken, setInputToken] = useState<Token>(defaultInputToken);
 	const [outputToken, setOutputToken] = useState<Token>(defaultOutputToken);
 
-	const [tokens, setTokens] = useState<Token[]>(initialTokens);
+	const [tokens] = useState<Token[]>(initialTokens);
+
+    const {address} = useAccount()
+    
+    const {data: inputNeonAddress, isError: isInputError, error: inputError} = useGetSPL(inputToken.address_spl)
+    const {data: outputNeonAddress, isError: isOutputError, error: outputError} = useGetSPL(outputToken.address_spl)
+
+    const { data: quote, isPending } = useQuote({inputMint: inputToken.address_spl, outputMint: outputToken.address_spl, amount: (inputAmount * (10 ** inputToken.decimals)), slippageBps: 5, enabled: inputAmount != 0})
+    const {data: swapInstructions, isError: isSwapInstructionsError, error: swapInstructionsError} = useSwapInstructions(quote!, outputNeonAddress!, address!, quote != undefined && outputNeonAddress != undefined && address!=undefined)
+
+    const {writeContract} = useWriteContract()
 
 	useEffect(() => {
 		if (tokens && tokens.length > 0) {
@@ -50,27 +60,43 @@ export default function SwapClient({
 	}, [inputToken, outputToken, router]);
 
 	const handleSwap = () => {
-		// Console log for now
-		console.log("Swap", {
-			inputAmount,
-			outputAmount,
-			inputToken,
-			outputToken,
-		});
-	};
+        if (!isInputError && !isOutputError && !isPending && quote != undefined && inputNeonAddress != undefined && outputNeonAddress != undefined && address != undefined) {
+            /*
+            writeContract({
+                abi: abi,
+                address: inputNeonAddress,
+                functionName: 'approve',
+                args: ["0x16906ADb704590F94F8a32ff0a690306A34A0bfC", BigInt(inputAmount)]
+            })
+            */
+            if (swapInstructions != undefined){
+                console.log(swapInstructions)
+
+                console.log(inputNeonAddress)
+                console.log(outputNeonAddress)
+
+                const pubKey = publicKeyToBytes32(swapInstructions.programId)
+                console.log(pubKey)
+
+                const instructionsData = prepareInstructionData(swapInstructions.data)
+                console.log(instructionsData)
+
+                const accountsData =prepareInstructionAccounts(swapInstructions.accounts)
+
+                writeContract({
+                    abi: ICSJupiterSwapAbi,
+                    address: "0x16906ADb704590F94F8a32ff0a690306A34A0bfC",
+                    functionName: 'jupiterSwap',
+                    args: [inputNeonAddress, outputNeonAddress, BigInt(inputAmount * (10 ** inputToken.decimals)), pubKey, instructionsData, accountsData]
+                })
+            }
+        }
+    };
 
 	const handleInputAmountChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
 	) => {
-		setInputAmount(e.target.value);
-		setOutputAmount(e.target.value); // same value as the input for now
-	};
-
-	const handleOutputAmountChange = (
-		e: React.ChangeEvent<HTMLInputElement>,
-	) => {
-		setOutputAmount(e.target.value);
-		setInputAmount(e.target.value); // same value as the input for now
+		setInputAmount(Number(e.target.value));
 	};
 
 	if (!tokens || tokens.length === 0) {
@@ -100,7 +126,7 @@ export default function SwapClient({
 					token={inputToken}
 					tokens={tokens}
 					amount={inputAmount}
-					isLoading={false}
+					isLoading={isPending}
 					onSelect={setInputToken}
 					defaultToken={defaultInputToken}
 					onChange={handleInputAmountChange}
@@ -113,9 +139,6 @@ export default function SwapClient({
 							const temp = inputToken;
 							setInputToken(outputToken || defaultOutputToken);
 							setOutputToken(temp);
-							const tempAmount = inputAmount;
-							setInputAmount(outputAmount);
-							setOutputAmount(tempAmount);
 						}}
 						type="button"
 						aria-label="Swap tokens"
@@ -128,11 +151,11 @@ export default function SwapClient({
 					customBg="bg-lightGray mb-[34px]"
 					token={outputToken}
 					tokens={tokens}
-					amount={outputAmount}
-					isLoading={false}
+					amount={(Number(quote?.outAmount ?? 0) / (10 ** outputToken.decimals))}
+					isLoading={isPending}
 					onSelect={setOutputToken}
 					defaultToken={defaultOutputToken}
-					onChange={handleOutputAmountChange}
+                    readOnly
 				/>
 				<SwapBtn handleSwap={handleSwap} />
 			</div>

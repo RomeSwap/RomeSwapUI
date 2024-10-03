@@ -1,11 +1,7 @@
 "use client";
 
-// Web3
 import { useAccount } from "wagmi";
-
-// Components
 import CustomConnectWalletBtn from "../button/CustomConnectWalletBtn";
-
 import clsx from "clsx";
 
 const SwapBtn = ({ handleSwap }: { handleSwap: () => void }) => {

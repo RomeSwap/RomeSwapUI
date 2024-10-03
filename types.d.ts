@@ -1,5 +1,6 @@
 type Token = {
 	address: string;
+    address_spl: string;
 	symbol: string;
 	name: string;
 	decimals: number;

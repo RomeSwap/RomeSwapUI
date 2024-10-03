@@ -1,11 +1,7 @@
 "use client";
 
 import Image from "next/image";
-
-// Components
 import TokenSelectorModal from "@/components/modals/TokenSelectorModal";
-
-// React icons
 import { FaAngleDown } from "react-icons/fa6";
 import { useState } from "react";
 import clsx from "clsx";
@@ -13,12 +9,13 @@ import clsx from "clsx";
 interface SwapInputComponentProps {
 	token: Token;
 	tokens: Token[] | undefined;
-	amount: string;
+	amount: number;
 	defaultToken?: Token;
 	isLoading: boolean;
 	onSelect: (token: Token) => void;
-	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	customBg: string;
+    readOnly?: boolean
 }
 
 const SwapInputComponent = ({
@@ -30,6 +27,7 @@ const SwapInputComponent = ({
 	defaultToken,
 	onSelect,
 	customBg,
+    readOnly
 }: SwapInputComponentProps) => {
 	const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
@@ -77,6 +75,7 @@ const SwapInputComponent = ({
 						value={amount}
 						onChange={onChange}
 						aria-label={`Enter amount of ${token.symbol}`}
+                        readOnly={readOnly ?? false}
 					/>
 					<div className="text-grayText text-xs text-end ">
 						~XXUSD
