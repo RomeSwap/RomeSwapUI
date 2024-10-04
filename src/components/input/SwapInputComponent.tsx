@@ -47,14 +47,15 @@ const SwapInputComponent = ({
 			<div className="flex flex-col gap-y-2">
 				<div className="flex items-center justify-between">
 					<button
-						className="flex items-center justify-between gap-x-2 bg-grayBg px-3 py-1.5 rounded-md h-[35px] w-32"
+						className="flex items-center justify-between gap-x-2 bg-grayBg px-3 py-1.5 rounded-md h-[35px] max-w-md"
 						type="button"
 						onClick={toggleSelector}
+						aria-label="Open token selector modal"
 					>
-						<div className="w-full h-full flex items-center gap-x-2">
+						<div className="w-full h-full flex items-center mr-4">
 							{token.logoURI && (
 								<Image
-									className="w-[21px] h-[21px]"
+									className="w-[21px] h-[21px] rounded-full"
 									src={
 										imageError || !token.logoURI
 											? DEFAULT_LOGO_URI
@@ -67,7 +68,7 @@ const SwapInputComponent = ({
 									onError={() => setImageError(true)}
 								/>
 							)}
-							<div className="">{token.symbol}</div>
+							<div className="ml-1">{token.symbol}</div>
 						</div>
 						<div className="" aria-hidden="true">
 							<FaAngleDown />
