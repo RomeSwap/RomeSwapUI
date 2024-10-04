@@ -1,6 +1,10 @@
 import { NextPage } from "next";
 import Image from "next/image";
+
+import { toast } from "react-hot-toast";
+
 import { GoArrowDown, GoXCircleFill } from "react-icons/go";
+import TransactionToast from "../toasts/transactionToast";
 
 interface Props {
 	onClose: () => void;
@@ -34,15 +38,16 @@ const ConfirmSwap: NextPage<Props> = ({
 	tradingFee = 0.0002, // placheolder
 }) => {
 	const handleSwap = () => {
-		// Console log for now
 		console.log("Swap", {
 			inAmount,
 			outAmount,
 			inputToken,
 			outputToken,
 		});
+		toast.custom(<TransactionToast status={true} />);
 		onClose();
 	};
+
 	return (
 		<div>
 			<div className="absolute z-50 top-0 left-0 w-screen h-screen flex items-center justify-center">

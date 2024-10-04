@@ -4,9 +4,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { defaultInputToken, defaultOutputToken } from "@/libs/defaultToken";
 import SlippageSettingsModal from "@/components/modals/SlippageSettingsModal";
-import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
+import ConfirmSwap from "@/components/modals/ConfirmSwap";
 import SwapInputComponent from "@/components/input/SwapInputComponent";
 import SwapBtn from "@/components/button/SwapBtn";
+
+// Icons
+import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
 import { PiArrowsDownUpBold } from "react-icons/pi";
 import { useAccount, useBalance, useReadContract, useWriteContract } from "wagmi";
 import { useQuote } from "@/libs/hooks/jupiter/useQuote";
@@ -19,7 +22,6 @@ import { ERC20ForSPLAbi } from "@/libs/hooks/neon/abis/ERC20ForSPL";
 import { ERC20ForSplFactoryAbi } from "@/libs/hooks/neon/abis/ERC20ForSplFactory";
 import { publicKeyToBytes32 } from "@/libs/hooks/neon/utils";
 import { ZeroAddress } from "ethers";
-import ConfirmSwap from "@/components/modals/ConfirmSwap";
 
 export default function SwapClient() {
   const router = useRouter();
