@@ -19,7 +19,7 @@ interface SwapInputComponentProps {
 	onSelect: (token: Token) => void;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	customBg: string;
-	valueInUSDC: string | null;
+	valueInUSDC: number | null;
 }
 
 const DEFAULT_LOGO_URI =
@@ -89,9 +89,9 @@ const SwapInputComponent = ({
 						onChange={onChange}
 						aria-label={`Enter amount of ${token.symbol}`}
 					/>
-					{valueInUSDC && (
+					{valueInUSDC !== undefined && amount !== "" && (
 						<div className="w-full text-grayText font-thin text-2xl text-end ">
-							~{valueInUSDC} USDC
+							~${valueInUSDC}
 						</div>
 					)}
 				</div>

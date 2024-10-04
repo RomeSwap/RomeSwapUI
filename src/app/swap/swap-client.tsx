@@ -2,7 +2,7 @@
 
 // Next
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // Libs
 import { defaultInputToken, defaultOutputToken } from "@/libs/defaultToken";
@@ -31,12 +31,25 @@ export default function SwapClient() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
+	// pair
 	const [inputTokenPrice, setInputTokenPrice] = useState<number | null>(null);
-	const [inputValueInUSDC, setInputValueInUSDC] = useState<string | null>(
+	const [outputTokenPrice, setOutputTokenPrice] = useState<number | null>(
+		null,
+	);
+
+	const [inputValueInUSDC, setInputValueInUSDC] = useState<number | null>(
 		null,
 	);
 
 	const [isSlippage, setIsSlippage] = useState(false);
+
+	// Token price in USDC
+	useEffect(() => {
+		if (inputTokenPrice && inputAmount) {
+			const valueInUSDC = parseFloat(inputAmount) * inputTokenPrice;
+			setInputValueInUSDC(parseFloat(valueInUSDC.toFixed(2)));
+		}
+	}, [inputAmount, inputTokenPrice]);
 
 	useEffect(() => {
 		async function fetchTokens() {
@@ -94,47 +107,71 @@ export default function SwapClient() {
 		e: React.ChangeEvent<HTMLInputElement>,
 	) => {
 		setInputAmount(e.target.value);
-		setOutputAmount(e.target.value); // same value as the input for now
 	};
 
 	const handleOutputAmountChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
 	) => {
-		setOutputAmount(e.target.value);
-		setInputAmount(e.target.value); // same value as the input for now
+		const newOutputAmount = e.target.value;
+		setOutputAmount(newOutputAmount);
+
+		if (inputTokenPrice && newOutputAmount !== "") {
+			const newInputAmount = (
+				parseFloat(newOutputAmount) / inputTokenPrice
+			).toFixed(6);
+			setInputAmount(newInputAmount);
+		} else {
+			setInputAmount("");
+		}
 	};
 
-	useEffect(() => {
-		async function fetchPrice() {
-			try {
-				const response = await fetch(
-					`https://price.jup.ag/v6/price?ids=${inputToken.address}`,
-				);
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				const data = await response.json();
-				const priceData: PriceData = data.data[inputToken.address];
-				setInputTokenPrice(priceData.price);
-			} catch (error) {
-				console.error("Error fetching price:", error);
-				setInputTokenPrice(null);
+	const fetchPrices = useCallback(async () => {
+		try {
+			const response = await fetch(
+				`https://price.jup.ag/v6/price?ids=${inputToken.address}&vsToken=${outputToken.address}`,
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-		}
 
-		if (inputToken) {
-			fetchPrice();
+			const data = await response.json();
+			const priceData: PriceData = data.data[inputToken.address];
+			setInputTokenPrice(priceData.price);
+			setOutputTokenPrice(1); // 1 cos the price is relative to the output
+		} catch (error) {
+			console.error("Error fetching price:", error);
+			setInputTokenPrice(null);
+			setOutputTokenPrice(null);
 		}
-	}, [inputToken]);
+	}, [inputToken, outputToken]);
 
 	useEffect(() => {
-		if (inputTokenPrice !== null && inputAmount !== "") {
-			const valueInUSDC = parseFloat(inputAmount) * inputTokenPrice;
-			setInputValueInUSDC(valueInUSDC.toFixed(2));
+		fetchPrices();
+	}, [fetchPrices, inputAmount]);
+
+	const updateOutputAmount = useCallback(() => {
+		if (inputTokenPrice && inputAmount !== "") {
+			const inputValue = parseFloat(inputAmount) * inputTokenPrice;
+			const newOutputAmount = inputValue.toFixed(6); // I saw 6 on most dexes
+			setOutputAmount(newOutputAmount);
 		} else {
-			setInputValueInUSDC(null);
+			setOutputAmount("");
 		}
-	}, [inputAmount, inputTokenPrice]);
+	}, [inputTokenPrice, inputAmount]);
+
+	useEffect(() => {
+		updateOutputAmount();
+	}, [updateOutputAmount]);
+
+	const handleInputTokenSelect = (token: Token) => {
+		setInputToken(token);
+		fetchPrices();
+	};
+
+	const handleOutputTokenSelect = (token: Token) => {
+		setOutputToken(token);
+		fetchPrices();
+	};
 
 	if (isLoading) {
 		return <div>Loading tokens...</div>;
@@ -177,7 +214,7 @@ export default function SwapClient() {
 				tokens={tokens}
 				amount={inputAmount}
 				isLoading={false}
-				onSelect={setInputToken}
+				onSelect={handleInputTokenSelect}
 				defaultToken={defaultInputToken}
 				onChange={handleInputAmountChange}
 				valueInUSDC={inputValueInUSDC}
@@ -207,11 +244,17 @@ export default function SwapClient() {
 				tokens={tokens}
 				amount={outputAmount}
 				isLoading={false}
-				onSelect={setOutputToken}
+				onSelect={handleOutputTokenSelect}
 				defaultToken={defaultOutputToken}
 				onChange={handleOutputAmountChange}
 				valueInUSDC={inputValueInUSDC}
 			/>
+			{inputTokenPrice && (
+				<div className="text-sm mb-8 text-grayText text-end">
+					1 {inputToken.symbol} = {inputTokenPrice.toFixed(6)}{" "}
+					{outputToken.symbol}
+				</div>
+			)}
 			<SwapBtn handleSwap={handleSwap} />
 		</div>
 	);
