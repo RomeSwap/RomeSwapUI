@@ -16,6 +16,7 @@ import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
 import SwapInputComponent from "@/components/input/SwapInputComponent";
 import SwapBtn from "@/components/button/SwapBtn";
 import { PiArrowsDownUpBold } from "react-icons/pi";
+import ConfirmSwap from "@/components/modals/ConfirmSwap";
 
 export default function SwapClient() {
 	const router = useRouter();
@@ -42,6 +43,16 @@ export default function SwapClient() {
 	);
 
 	const [isSlippage, setIsSlippage] = useState(false);
+	const [isConfirmSwapModal, setIsConfirmSwapModal] = useState(false);
+
+	const [isConfirmSwap, setIsConfirmSwap] = useState(true);
+
+	// Check if ConfirmSwap btn is openable - in & out amount set
+	useEffect(() => {
+		if (inputAmount && outputAmount) {
+			setIsConfirmSwap(false);
+		}
+	}, [setIsConfirmSwap, inputAmount, outputAmount]);
 
 	// Token price in USDC
 	useEffect(() => {
@@ -92,16 +103,6 @@ export default function SwapClient() {
 
 		router.push(`/swap?${params.toString()}`);
 	}, [inputToken, outputToken, router]);
-
-	const handleSwap = () => {
-		// Console log for now
-		console.log("Swap", {
-			inputAmount,
-			outputAmount,
-			inputToken,
-			outputToken,
-		});
-	};
 
 	const handleInputAmountChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
@@ -255,7 +256,26 @@ export default function SwapClient() {
 					{outputToken.symbol}
 				</div>
 			)}
-			<SwapBtn handleSwap={handleSwap} />
+			<SwapBtn
+				confirmSwapModal={() =>
+					setIsConfirmSwapModal(!isConfirmSwapModal)
+				}
+				isDisabled={isConfirmSwap}
+			/>
+			{isConfirmSwapModal && (
+				<ConfirmSwap
+					onClose={() => setIsConfirmSwapModal(!isConfirmSwapModal)}
+					inAmount={parseFloat(inputAmount)}
+					outAmount={parseFloat(outputAmount)}
+					inURI={inputToken.logoURI}
+					outURI={outputToken.logoURI}
+					inputToken={inputToken.name}
+					outputToken={outputToken.name}
+					inputSymbol={inputToken.symbol}
+					outputSymbol={outputToken.symbol}
+					price={inputTokenPrice}
+				/>
+			)}
 		</div>
 	);
 }
