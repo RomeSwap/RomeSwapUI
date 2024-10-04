@@ -8,7 +8,7 @@ import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
 import SwapInputComponent from "@/components/input/SwapInputComponent";
 import SwapBtn from "@/components/button/SwapBtn";
 import { PiArrowsDownUpBold } from "react-icons/pi";
-import { useAccount, useBalance, useReadContract, useTransaction, useTransactionReceipt, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useAccount, useBalance, useReadContract, useWriteContract } from "wagmi";
 import { useQuote } from "@/libs/hooks/jupiter/useQuote";
 import { useTokenList } from "@/libs/tokens";
 import useGetSPL from "@/libs/hooks/neon/useGetSPL";
