@@ -17,6 +17,7 @@ const config: Config = {
 				lightGray: "#292F40",
 				dark: "#141721",
 				background: "#171821",
+				error: "#991b1b",
 			},
 		},
 	},

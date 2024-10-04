@@ -10,13 +10,13 @@ import { getTokenList } from "@/libs/tokens";
 
 // Components
 import SlippageSettingsModal from "@/components/modals/SlippageSettingsModal";
+import ConfirmSwap from "@/components/modals/ConfirmSwap";
+import SwapInputComponent from "@/components/input/SwapInputComponent";
+import SwapBtn from "@/components/button/SwapBtn";
 
 // Icons
 import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
-import SwapInputComponent from "@/components/input/SwapInputComponent";
-import SwapBtn from "@/components/button/SwapBtn";
 import { PiArrowsDownUpBold } from "react-icons/pi";
-import ConfirmSwap from "@/components/modals/ConfirmSwap";
 
 export default function SwapClient() {
 	const router = useRouter();
