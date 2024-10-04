@@ -19,6 +19,7 @@ import { ERC20ForSPLAbi } from "@/libs/hooks/neon/abis/ERC20ForSPL";
 import { ERC20ForSplFactoryAbi } from "@/libs/hooks/neon/abis/ERC20ForSplFactory";
 import { publicKeyToBytes32 } from "@/libs/hooks/neon/utils";
 import { ZeroAddress } from "ethers";
+import ConfirmSwap from "@/components/modals/ConfirmSwap";
 
 export default function SwapClient() {
   const router = useRouter();
@@ -35,17 +36,28 @@ export default function SwapClient() {
 
   const {data, isSuccess, isLoading, isError, error} = useTokenList()
 
+const [isConfirmSwapModal, setIsConfirmSwapModal] = useState(false);
+
+ const [isConfirmSwap, setIsConfirmSwap] = useState(true);
+
   useEffect(() => {
       if (isSuccess) {
         setTokens([defaultInputToken, ...data]);
       }
   }, [data, isSuccess]);
 
+
+	// Check if ConfirmSwap btn is openable - in & out amount set
+	useEffect(() => {
+		if (inputAmount && outputAmount) {
+			setIsConfirmSwap(false);
+		}
+	}, [setIsConfirmSwap, inputAmount, outputAmount]);
+
   useEffect(() => {
     if (tokens.length > 0) {
       const inputCurrency = searchParams.get("inputCurrency");
       const outputCurrency = searchParams.get("outputCurrency");
-
       const foundInputToken =
         tokens.find((t) => t.address === inputCurrency) || defaultInputToken;
       const foundOutputToken =
