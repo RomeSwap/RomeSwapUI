@@ -4,7 +4,7 @@ import Image from "next/image";
 import { toast } from "react-hot-toast";
 
 import { GoArrowDown, GoXCircleFill } from "react-icons/go";
-import TransactionToast from "../toasts/transactionToast";
+import TransactionToast from "../toasts/TransactionToast";
 
 interface Props {
 	onClose: () => void;
