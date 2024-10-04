@@ -50,7 +50,7 @@ const TokenSelectorModal = ({
 				className="w-full h-full bg-transparent backdrop-blur-lg"
 				onClick={onClose}
 			></div>
-			<div className="absolute bg-grayBg rounded-lg w-[90%] lg:w-[641px]">
+			<div className="absolute bg-grayBg rounded-lg w-[90%] md:max-w-md lg:w-[641px]">
 				<div className="flex items-center justify-between gap-x-5 p-4">
 					<div className="flex items-center gap-x-4">
 						<label htmlFor="token-search" className="sr-only">
@@ -94,9 +94,8 @@ const TokenSelectorModal = ({
 									<div className="ml-2 w-11 h-11">
 										{token.logoURI && (
 											<Image
-												className="w-full h-full"
+												className="w-full h-full  rounded-full"
 												src={token.logoURI}
-												// src={token.logoURI!}
 												width={46}
 												height={46}
 												alt={`${token.name} logo`}
