@@ -31,3 +31,11 @@ interface TokenSelectorModalProps {
   isLoading: boolean;
   defaultToken?: Token;
 }
+
+interface PriceData {
+	id: string;
+	mintSymbol: string;
+	vsToken: string;
+	vsTokenSymbol: string;
+	price: number;
+}

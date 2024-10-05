@@ -21,7 +21,7 @@ const SwapBtn = ({
     <button
       className={clsx(
         "w-full text-center bg-primary font-semibold text-dark py-2 lg:py-3 rounded-lg",
-        isDisabled ? " cursor-not-allowed" : ""
+        isDisabled ? " cursor-not-allowed" : "",
       )}
       type="button"
       onClick={confirmSwapModal}

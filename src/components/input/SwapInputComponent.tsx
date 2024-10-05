@@ -50,7 +50,7 @@ const SwapInputComponent = ({
       <div className="flex flex-col gap-y-2">
         <div className="flex items-center justify-between">
           <button
-            className="flex items-center justify-between gap-x-2 bg-grayBg px-3 py-1.5 rounded-md h-[35px] w-32"
+            className="flex items-center justify-between gap-x-2 bg-grayBg px-3 py-1.5 rounded-md h-[35px] max-w-md"
             type="button"
             onClick={toggleSelector}
           >
