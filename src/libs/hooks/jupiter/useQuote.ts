@@ -8,7 +8,7 @@ interface QuoteArgs {
   inputMint: NotEVMAddress<string>;
   outputMint: NotEVMAddress<string>;
   amount: number;
-  slippageBps: number;
+  slippage: number;
   enabled: boolean;
 }
 
