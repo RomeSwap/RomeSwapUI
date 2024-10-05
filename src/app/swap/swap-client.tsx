@@ -118,11 +118,17 @@ export default function SwapClient() {
   const { data: outputTokenBalance } = useBalance({
     address,
     token: outputToken.evm,
+    query: {
+      refetchInterval: 5000,
+    },
   });
 
   const { data: inputTokenBalance } = useBalance({
     address,
     token: inputToken.evm,
+    query: {
+      refetchInterval: 5000,
+    },
   });
 
   useEffect(() => {

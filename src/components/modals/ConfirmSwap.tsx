@@ -20,7 +20,7 @@ import {
   ERC20ForSplFactoryAddress,
   ICSFlowMainnetAddress,
 } from "@/libs/hooks/neon/constants";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ZeroAddress } from "ethers";
 import { publicKeyToBytes32 } from "@/libs/hooks/neon/utils";
 import { ERC20ForSplFactoryAbi } from "@/libs/hooks/neon/abis/ERC20ForSplFactory";
@@ -34,9 +34,41 @@ interface Props {
   price: number | null;
 }
 
+const SwapButton: React.FC<{
+  handleSwap: () => void;
+  disabled: boolean;
+  text: string;
+}> = ({ handleSwap, disabled, text }) => {
+  return (
+    <button
+      className="bg-primary w-full py-2 text-background rounded-md font-semibold hover:bg-primary/75"
+      onClick={handleSwap}
+      aria-label={text}
+      disabled={disabled}
+      type="button"
+    >
+      {text}
+    </button>
+  );
+};
+
 const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
-  const [hasAllowance, setAllowance] = useState(false);
+  const [hasAllowance, setHasAllowance] = useState(false);
   const [hasSpl, setHasSpl] = useState(false);
+  const [swapStep, setSwapStep] = useState<
+    | "idle"
+    | "approving"
+    | "approvalPending"
+    | "splDeploying"
+    | "splDeployPending"
+    | "readyToSwap"
+    | "swapping"
+    | "swapPending"
+    | "completed"
+    | "approvalCompleted"
+    | "splDeployCompleted"
+    | "error"
+  >("idle");
 
   const quote = useAppSelector(selectQuote);
   const inputToken = useAppSelector(selectInputToken);
@@ -56,32 +88,44 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
 
   const { writeContract, data: hash, error, isError } = useWriteContract();
 
-  useEffect(() => {
-    if (isError && error) {
-      toast.custom(<TransactionToast status="error" tx={error.message} />);
-      console.error(error);
-    }
-  }, [error, isError]);
-
   const txReceipt = useWaitForTransactionReceipt({
     hash,
   });
 
+  const [transactionStatus, setTransactionStatus] = useState("");
+
   useEffect(() => {
     if (!hash) return;
 
-    if (txReceipt.isSuccess) {
-      toast.custom(<TransactionToast status="success" tx={hash} />);
-    }
+    if (txReceipt.isPending && transactionStatus !== "pending") {
+      setTransactionStatus("pending");
 
-    if (txReceipt.isPending) {
       toast.custom(<TransactionToast status="pending" tx={hash} />);
     }
 
-    if (txReceipt.isError && txReceipt.error) {
+    if (txReceipt.isSuccess && transactionStatus !== "success") {
+      setTransactionStatus("success");
+
+      toast.custom(<TransactionToast status="success" tx={hash} />);
+
+      if (swapStep === "approvalPending") {
+        setHasAllowance(true);
+        setSwapStep("approvalCompleted");
+      } else if (swapStep === "splDeployPending") {
+        setHasSpl(true);
+        setSwapStep("splDeployCompleted");
+      } else if (swapStep === "swapPending") {
+        setSwapStep("completed");
+      }
+    }
+
+    if (txReceipt.isError && txReceipt.error && transactionStatus !== "error") {
+      setTransactionStatus("error");
+
       toast.custom(
         <TransactionToast status="error" tx={txReceipt.error.message} />
       );
+      setSwapStep("error");
     }
   }, [
     hash,
@@ -89,99 +133,130 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
     txReceipt.isPending,
     txReceipt.isError,
     txReceipt.error,
+    swapStep,
+    transactionStatus,
   ]);
 
   useEffect(() => {
-    if (outputToken.evm && outputToken.evm != ZeroAddress) {
-      setHasSpl(true);
+    if (isError && error) {
+      toast.custom(<TransactionToast status="error" tx={error.name} />);
+      console.error(error);
+      setSwapStep("error");
     }
-  }, [outputToken.evm]);
+  }, [error, isError]);
 
   useEffect(() => {
-    if (inputTokenAllowance.data) {
-      const inputAmountWei = inputToken.weiAmount;
+    if (inputTokenAllowance.data && inputToken.weiAmount) {
+      const allowanceBigInt = BigInt(inputTokenAllowance.data ?? 0);
+      const inputAmountWeiBigInt = BigInt(inputToken.weiAmount);
 
-      if (BigInt(inputTokenAllowance.data ?? 0) < BigInt(inputAmountWei)) {
-        setAllowance(false);
-        return;
+      if (allowanceBigInt >= inputAmountWeiBigInt) {
+        setHasAllowance(true);
+      } else {
+        setHasAllowance(false);
       }
-
-      setAllowance(true);
     }
   }, [inputTokenAllowance.data, inputToken.weiAmount]);
 
-  const handleApproval = () => {
+  useEffect(() => {
+    if (outputToken.evm && outputToken.evm !== ZeroAddress) {
+      setHasSpl(true);
+    } else {
+      setHasSpl(false);
+    }
+  }, [outputToken.evm]);
+
+  const handleApproval = useCallback(() => {
     if (inputToken.evm) {
+      setSwapStep("approving");
       writeContract({
         abi: ERC20ForSPLAbi,
         address: inputToken.evm,
         functionName: "approve",
         args: [ICSFlowMainnetAddress, BigInt(inputToken.weiAmount)],
       });
+      setSwapStep("approvalPending");
     }
-  };
+  }, [inputToken.evm, inputToken.weiAmount, writeContract]);
 
-  const handleSplDeployment = () => {
-    if (outputToken.evm == ZeroAddress) {
+  const handleSplDeployment = useCallback(() => {
+    if (outputToken.evm === ZeroAddress) {
+      setSwapStep("splDeploying");
       writeContract({
         abi: ERC20ForSplFactoryAbi,
         address: ERC20ForSplFactoryAddress,
         functionName: "createErc20ForSpl",
         args: [publicKeyToBytes32(outputToken.svm)],
       });
+      setSwapStep("splDeployPending");
     }
-  };
+  }, [outputToken.evm, outputToken.svm, writeContract]);
 
-  const handleSwap = async () => {
-    // the executor must be allowed to take inputTokens out of our account
+  const proceedToSwap = useCallback(async () => {
+    if (!quote || !inputToken.evm || !outputToken.evm || !address) return;
+
+    setSwapStep("swapping");
+    console.log("Executing swap");
+    const instructions = await fetchSwapInstruction(
+      quote,
+      outputToken.evm,
+      address
+    );
+    console.log(instructions);
+    writeContract({
+      abi: ICSJupiterSwapAbi,
+      address: ICSFlowMainnetAddress,
+      functionName: "jupiterSwap",
+      args: [
+        inputToken.evm,
+        outputToken.evm,
+        BigInt(inputToken.weiAmount),
+        instructions.programId,
+        instructions.data,
+        instructions.accounts,
+      ],
+    });
+    console.log("Swap transaction submitted");
+    setSwapStep("swapPending");
+  }, [
+    quote,
+    inputToken.evm,
+    outputToken.evm,
+    address,
+    inputToken.weiAmount,
+    writeContract,
+  ]);
+
+  const handleSwap = useCallback(() => {
     if (!hasAllowance) {
-      console.log("waiting for allowance");
-      handleApproval();
+      setSwapStep("idle");
+      console.log("Approval required");
       return;
     }
 
-    // there must be an spl contract for the output token.
-    // the input token must already have an spl, because you are trying
-    // to swap it
     if (!hasSpl) {
-      console.log("waiting for spl deployment");
-      handleSplDeployment();
+      setSwapStep("idle");
+      console.log("SPL deployment required");
       return;
     }
 
-    // if we got the allowance and the output token we can proceed with the actual swap
     if (
       hasAllowance &&
+      hasSpl &&
       inputToken.evm &&
       outputToken.evm &&
-      outputToken.evm != ZeroAddress &&
+      outputToken.evm !== ZeroAddress &&
       quote &&
       address
     ) {
-      console.log("executing swap");
-      const instructions = await fetchSwapInstruction(
-        quote,
-        outputToken.evm,
-        address
-      );
-      console.log(instructions);
-      writeContract({
-        abi: ICSJupiterSwapAbi,
-        address: ICSFlowMainnetAddress,
-        functionName: "jupiterSwap",
-        args: [
-          inputToken.evm,
-          outputToken.evm,
-          BigInt(inputToken.weiAmount),
-          instructions.programId,
-          instructions.data,
-          instructions.accounts,
-        ],
-      });
-      console.log("write executed");
-      return;
+      console.log("Ready to swap");
+      setSwapStep("readyToSwap");
     }
-  };
+  }, [address, hasAllowance, hasSpl, inputToken.evm, outputToken.evm, quote]);
+
+  useEffect(() => {
+    handleSwap();
+  }, [handleSwap]);
 
   return (
     <div>
@@ -276,18 +351,35 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
                 <div>{quote?.platformFee?.amount ?? 0} SOL</div>
               </div>
             </div>
-            <button
-              className="bg-primary w-full py-2 text-background rounded-md font-semibold hover:bg-primary/75"
-              onClick={handleSwap}
-              aria-label="Confirm Swap"
-              type="button"
-            >
-              {hasAllowance
-                ? hasSpl
-                  ? "Confirm Swap"
-                  : "Deploy SPL"
-                : "Set Allowance"}
-            </button>
+            {!hasAllowance && (
+              <SwapButton
+                handleSwap={handleApproval}
+                text="Approve Allowance"
+                disabled={swapStep != "idle" && swapStep !== "error"}
+              />
+            )}
+
+            {hasAllowance && !hasSpl && (
+              <SwapButton
+                handleSwap={handleSplDeployment}
+                text="Deploy SPL"
+                disabled={swapStep !== "idle" && swapStep !== "error"}
+              />
+            )}
+
+            {hasAllowance && hasSpl && (
+              <SwapButton
+                handleSwap={proceedToSwap}
+                text="Execute Swap"
+                disabled={
+                  swapStep !== "idle" &&
+                  swapStep !== "approvalCompleted" &&
+                  swapStep !== "splDeployCompleted" &&
+                  swapStep !== "error" &&
+                  swapStep !== "readyToSwap"
+                }
+              />
+            )}
           </div>
         </div>
       </div>
