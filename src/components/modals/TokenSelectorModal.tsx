@@ -1,33 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
 import walletTruncatizer from "@/libs/walletTruncatizer";
 import { GoXCircleFill } from "react-icons/go";
 import { IoSearchSharp } from "react-icons/io5";
+import { useAppDispatch, useAppSelector } from "@/libs/hooks/redux/redux";
+import { fetchSPLAddress, selectTokenList, setToken } from "@/libs/features/swap/swapSlice";
 
 const TokenSelectorModal = ({
-  tokens,
-  onSelect,
-  onClose,
+    setType,
   isLoading,
-  defaultToken,
+  onClose
 }: TokenSelectorModalProps) => {
+    const dispatch = useAppDispatch()
   const [search, setSearch] = useState("");
-  const [allTokens, setAllTokens] = useState<Token[]>([]);
+  const allTokens = useAppSelector(selectTokenList)
 
-  useEffect(() => {
-    if (tokens) {
-      if (defaultToken) {
-        setAllTokens([
-          defaultToken,
-          ...tokens.filter((t) => t.address !== defaultToken.address),
-        ]);
-      } else {
-        setAllTokens(tokens);
-      }
-    }
-  }, [tokens, defaultToken]);
+  const onSelect = (token: Token) => {
+    dispatch(setToken({token: token, type: setType}))
+    dispatch(fetchSPLAddress({solAddress: token.address, selType: setType}))
+    onClose()
+  }
 
   const filteredTokens = useCallback(() => {
     return allTokens.filter(

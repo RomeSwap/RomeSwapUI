@@ -29,7 +29,7 @@ export function useQuote({
       jupiterApiClient.quoteGet({
         inputMint,
         outputMint,
-        amount,
+        amount: Number(amount),
         slippageBps,
         maxAccounts: 13,
         asLegacyTransaction: true,

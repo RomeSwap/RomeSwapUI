@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 import Navbar from "@/components/navbar";
 import BgEllipseSvgs from "@/components/BgEllipseSvgs";
 import RainBowKitCustomProvider from "@/providers/rainbowkitprovider";
+import StoreProvider from "@/providers/storeProvider";
 
 export const metadata: Metadata = {
   title: "Homepage | LoremSwap",
@@ -27,11 +28,13 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} bg-background text-light antialiased`}
       >
+      <StoreProvider>
         <RainBowKitCustomProvider>
           <Navbar />
           {children}
           <BgEllipseSvgs />
         </RainBowKitCustomProvider>
+      </StoreProvider>
       </body>
     </html>
   );

@@ -1,3 +1,5 @@
+import { selectSlippage, setSlippage } from "@/libs/features/swap/swapSlice";
+import { useAppDispatch, useAppSelector } from "@/libs/hooks/redux/redux";
 import clsx from "clsx";
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -10,9 +12,10 @@ interface SlippageSettingsProps {
 const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
   onClose,
 }) => {
+    const dispatch = useAppDispatch()
+    const slippage = useAppSelector(selectSlippage)
   const slippagePercentages = [0.1, 0.5, 1];
   const maxSlippageAllowed = 49;
-  const [slippage, setSlippage] = useState<number | null>(1);
   const [warningMsg, setWarningMsg] = useState<string | null>(null);
 
   const isSlippageActive = (percentage: number) => {
@@ -23,7 +26,7 @@ const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
 
   const handleSlippageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
-    setSlippage(isNaN(value) ? null : value); // If the input is empty, set slippage to null
+    dispatch(setSlippage(isNaN(value) ? 1 : value))
   };
 
   useEffect(() => {
@@ -73,7 +76,7 @@ const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
                 return (
                   <button
                     key={slp}
-                    onClick={() => setSlippage(slp)}
+                    onClick={() => dispatch(setSlippage(slp))}
                     className={clsx(
                       "w-16 bg-grayText/5 py-1 rounded-md border transition-all duration-300 ease-in-out",
                       isSlippageActive(slp)

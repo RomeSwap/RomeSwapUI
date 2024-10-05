@@ -26,9 +26,8 @@ interface Token {
 }
 
 interface TokenSelectorModalProps {
-  tokens: Token[] | undefined;
-  onClose: () => void;
+  setType: "input"|"output"
+  onClose: () => void
   isLoading: boolean;
-  onSelect: (token: Token) => void;
   defaultToken?: Token;
 }

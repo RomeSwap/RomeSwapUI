@@ -5,15 +5,16 @@ import TokenSelectorModal from "@/components/modals/TokenSelectorModal";
 import { FaAngleDown } from "react-icons/fa6";
 import { useState } from "react";
 import clsx from "clsx";
+import { useAppDispatch } from "@/libs/hooks/redux/redux";
+import { setInputTokenAmount } from "@/libs/features/swap/swapSlice";
 
 interface SwapInputComponentProps {
+  setType: "input" | "output"
   token: Token;
-  tokens: Token[] | undefined;
   amount: number;
   defaultToken?: Token;
   isLoading: boolean;
   onSelect: (token: Token) => void;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   customBg: string;
   readOnly?: boolean;
   balance?: number;
@@ -23,22 +24,26 @@ const DEFAULT_LOGO_URI =
   "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
 
 const SwapInputComponent = ({
-  onChange,
   token,
-  tokens,
   amount,
   isLoading,
   defaultToken,
-  onSelect,
   customBg,
   readOnly,
-  balance
+  balance,
+  setType
 }: SwapInputComponentProps) => {
   const [imageError, setImageError] = useState(false);
-
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+  const dispatch = useAppDispatch()
 
   const toggleSelector = () => setIsSelectorOpen(!isSelectorOpen);
+
+  const handleAmountChange = (e: any) => {
+      if (setType == "input") {
+          dispatch(setInputTokenAmount(Number(e.target.value)))
+      }
+  }
 
   return (
     <div className={clsx("w-full flex flex-col p-4 rounded-lg", customBg)}>
@@ -73,7 +78,7 @@ const SwapInputComponent = ({
           </button>
           <div className="text-xs text-grayText">
             <div className="">Balance</div>
-            <div className="">{balance}</div>
+            <div className="">{balance ?? 0}</div>
             <button type="button">MAX</button>
           </div>
         </div>
@@ -84,7 +89,7 @@ const SwapInputComponent = ({
             className="p-2 w-full bg-transparent text-2xl placeholder:text-light/30 outline-none appearance-none"
             placeholder="0.00"
             value={amount}
-            onChange={onChange}
+            onChange={handleAmountChange}
             aria-label={`Enter amount of ${token.symbol}`}
             readOnly={readOnly ?? false}
           />
@@ -93,14 +98,10 @@ const SwapInputComponent = ({
       </div>
       {isSelectorOpen && (
         <TokenSelectorModal
+          setType={setType}
           defaultToken={defaultToken}
           onClose={toggleSelector}
-          tokens={tokens || []}
           isLoading={isLoading}
-          onSelect={(selectedToken) => {
-            onSelect(selectedToken);
-            toggleSelector();
-          }}
         />
       )}
     </div>
