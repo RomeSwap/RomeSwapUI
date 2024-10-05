@@ -106,6 +106,9 @@ export const swapSlice = createSlice({
         weiAmount: 0,
         ...ptoken,
       };
+      state.quote = undefined;
+      state.outputToken.humanAmount = 0;
+      state.outputToken.weiAmount = 0;
 
       switch (action.payload.type) {
         case "input":
@@ -121,6 +124,9 @@ export const swapSlice = createSlice({
         state.outputToken,
         state.inputToken,
       ];
+      state.quote = undefined;
+      state.outputToken.humanAmount = 0;
+      state.outputToken.weiAmount = 0;
     },
     setUserbalance: (
       state,
@@ -148,6 +154,9 @@ export const swapSlice = createSlice({
 
       state.inputToken.humanAmount = action.payload;
       state.inputToken.weiAmount = wei;
+      state.quote = undefined;
+      state.outputToken.humanAmount = 0;
+      state.outputToken.weiAmount = 0;
     },
     setOutputTokenAmount: (state, action: PayloadAction<QuoteResponse>) => {
       const wei = Number(action.payload.outAmount);
@@ -172,6 +181,9 @@ export const swapSlice = createSlice({
     },
     setSlippage: (state, action: PayloadAction<number>) => {
       state.slippage = action.payload;
+      state.quote = undefined;
+      state.outputToken.humanAmount = 0;
+      state.outputToken.weiAmount = 0;
     },
   },
   selectors: {
