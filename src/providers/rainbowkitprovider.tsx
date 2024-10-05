@@ -15,7 +15,6 @@ import {
   coinbaseWallet,
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { createClient } from "viem";
 import { getClient } from "@wagmi/core";
 
 const connectors = connectorsForWallets(
@@ -34,6 +33,7 @@ export const config = createConfig({
   transports: {
     [neonMainnet.id]: http(),
   },
+  ssr: true,
 });
 
 export const wagmiClient = getClient(config, {

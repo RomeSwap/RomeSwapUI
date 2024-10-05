@@ -1,18 +1,20 @@
 "use client";
+
 import { NextPage } from "next";
 import Image from "next/image";
-
-import { toast } from "react-hot-toast";
-
 import { GoArrowDown, GoXCircleFill } from "react-icons/go";
-import TransactionToast from "../toasts/TransactionToast";
 import { useAppSelector } from "@/libs/hooks/redux/redux";
 import {
   selectInputToken,
   selectOutputToken,
   selectQuote,
 } from "@/libs/features/swap/swapSlice";
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { ERC20ForSPLAbi } from "@/libs/hooks/neon/abis/ERC20ForSPL";
 import {
   ERC20ForSplFactoryAddress,
@@ -24,6 +26,8 @@ import { publicKeyToBytes32 } from "@/libs/hooks/neon/utils";
 import { ERC20ForSplFactoryAbi } from "@/libs/hooks/neon/abis/ERC20ForSplFactory";
 import { fetchSwapInstruction } from "@/libs/hooks/jupiter/useSwap";
 import { ICSJupiterSwapAbi } from "@/libs/hooks/neon/abis/ICSJupiterSwap";
+import toast from "react-hot-toast";
+import TransactionToast from "../toasts/TransactionToast";
 
 interface Props {
   onClose: () => void;
@@ -44,22 +48,48 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
     abi: ERC20ForSPLAbi,
     address: inputToken.evm,
     functionName: "allowance",
-    args: [address ?? "0x00", ICSFlowMainnetAddress],
+    args: [address ?? "0x0", ICSFlowMainnetAddress],
+    query: {
+      refetchInterval: 5000,
+    },
   });
 
-  const { writeContract, data: tx, error, status } = useWriteContract();
+  const { writeContract, data: hash, error, isError } = useWriteContract();
 
   useEffect(() => {
-    if (error) {
+    if (isError && error) {
+      toast.custom(<TransactionToast status="error" tx={error.message} />);
       console.error(error);
     }
-  }, [error]);
+  }, [error, isError]);
+
+  const txReceipt = useWaitForTransactionReceipt({
+    hash,
+  });
 
   useEffect(() => {
-    if (tx) {
-      toast.custom(<TransactionToast status={status} tx={tx} />);
+    if (!hash) return;
+
+    if (txReceipt.isSuccess) {
+      toast.custom(<TransactionToast status="success" tx={hash} />);
     }
-  }, [tx, status]);
+
+    if (txReceipt.isPending) {
+      toast.custom(<TransactionToast status="pending" tx={hash} />);
+    }
+
+    if (txReceipt.isError && txReceipt.error) {
+      toast.custom(
+        <TransactionToast status="error" tx={txReceipt.error.message} />
+      );
+    }
+  }, [
+    hash,
+    txReceipt.isSuccess,
+    txReceipt.isPending,
+    txReceipt.isError,
+    txReceipt.error,
+  ]);
 
   useEffect(() => {
     if (outputToken.evm && outputToken.evm != ZeroAddress) {
@@ -107,17 +137,15 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
     if (!hasAllowance) {
       console.log("waiting for allowance");
       handleApproval();
-      onClose();
       return;
     }
 
     // there must be an spl contract for the output token.
     // the input token must already have an spl, because you are trying
     // to swap it
-    if (hasSpl) {
+    if (!hasSpl) {
       console.log("waiting for spl deployment");
       handleSplDeployment();
-      onClose();
       return;
     }
 
@@ -150,7 +178,7 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
           instructions.accounts,
         ],
       });
-      onClose();
+      console.log("write executed");
       return;
     }
   };

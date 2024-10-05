@@ -1,7 +1,7 @@
 import React from "react";
 
 import clsx from "clsx";
-import { GoCheckCircle, GoXCircle } from "react-icons/go";
+import { GoCheckCircle, GoPlusCircle, GoXCircle } from "react-icons/go";
 
 interface ToastProps {
   status: "error" | "idle" | "pending" | "success";
@@ -20,6 +20,7 @@ const getClass = (status: "error" | "idle" | "pending" | "success") => {
 };
 
 const TransactionToast: React.FC<ToastProps> = ({ status, tx }) => {
+  console.log("asdf");
   return (
     <div
       className={
@@ -39,11 +40,13 @@ const TransactionToast: React.FC<ToastProps> = ({ status, tx }) => {
         )}
         {status == "pending" && (
           <div className="text-pending">
-            <GoXCircle />
+            <GoPlusCircle />
           </div>
         )}
       </div>
-      <div className="text-sm">{tx}</div>
+      <div className="text-sm">
+        Tx {status}: {tx}
+      </div>
     </div>
   );
 };
