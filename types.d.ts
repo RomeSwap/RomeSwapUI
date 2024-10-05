@@ -1,35 +1,35 @@
 interface JupiterToken {
-	chainId: number;
-	address: string;
-	symbol: string;
-	name: string;
-	decimals: number;
-	logoURI: string;
+  chainId: number;
+  address: string;
+  address_spl: string;
+  symbol: string;
+  name: string;
+  decimals: number;
+  logoURI: string;
 }
 
 interface JupiterTokenList {
-	name: string;
-	logoURI: string;
-	keywords: string[];
-	tags: Record<string, { name: string; description: string }>;
-	timestamp: string;
-	tokens: JupiterToken[];
+  name: string;
+  logoURI: string;
+  keywords: string[];
+  tags: Record<string, { name: string; description: string }>;
+  timestamp: string;
+  tokens: JupiterToken[];
 }
 
 interface Token {
-	address: string;
-	symbol: string;
-	name: string;
-	decimals: number;
-	logoURI: string;
+  address: string;
+  symbol: string;
+  name: string;
+  decimals: number;
+  logoURI: string;
 }
 
 interface TokenSelectorModalProps {
-	tokens: Token[] | undefined;
-	onClose: () => void;
-	isLoading: boolean;
-	onSelect: (token: Token) => void;
-	defaultToken?: Token;
+  setType: "input" | "output";
+  onClose: () => void;
+  isLoading: boolean;
+  defaultToken?: Token;
 }
 
 interface PriceData {
