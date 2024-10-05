@@ -18,19 +18,19 @@ export function useQuote({
   inputMint,
   outputMint,
   amount,
-  slippageBps,
+  slippage,
   enabled,
 }: QuoteArgs) {
   return useQuery({
     refetchInterval: 3000,
     enabled,
-    queryKey: ["jupiterQuote", inputMint, outputMint, amount, slippageBps],
+    queryKey: ["jupiterQuote", inputMint, outputMint, amount, slippage],
     queryFn: () =>
       jupiterApiClient.quoteGet({
         inputMint,
         outputMint,
         amount: Number(amount),
-        slippageBps,
+        slippageBps: Math.round(slippage * 100),
         maxAccounts: 13,
         asLegacyTransaction: true,
       }),

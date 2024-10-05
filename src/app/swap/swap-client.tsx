@@ -104,7 +104,7 @@ export default function SwapClient() {
     inputMint: inputToken.svm,
     outputMint: outputToken.svm,
     amount: Number(inputToken.weiAmount),
-    slippageBps: slippage,
+    slippage,
     enabled: Number(inputToken.weiAmount) != 0,
   });
 

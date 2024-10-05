@@ -319,7 +319,7 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
             <div className="flex flex-col items-center gap-y-2 justify-between w-full text-sm">
               <div className="w-full flex items-center justify-between">
                 <div className="text-primary">Slippage tolerance</div>
-                <div className="">{quote?.slippageBps}%</div>
+                <div className="">{(quote?.slippageBps ?? 0) / 100}%</div>
               </div>
               <p className="text-justify text-sm">
                 Output is estimated. You will receive at least{" "}
