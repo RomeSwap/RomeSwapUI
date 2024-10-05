@@ -15,7 +15,6 @@ import {
   selectInputToken,
   selectOutputToken,
   selectSlippage,
-  setInputTokenAmount,
   setOutputTokenAmount,
   setToken,
   setTokenList,
@@ -101,7 +100,7 @@ export default function SwapClient() {
 
   const slippage = useAppSelector(selectSlippage);
 
-  const { data: quote, isPending } = useQuote({
+  const { data: quote,isError: isQuoteError, isPending } = useQuote({
     inputMint: inputToken.svm,
     outputMint: outputToken.svm,
     amount: Number(inputToken.weiAmount),
@@ -110,10 +109,10 @@ export default function SwapClient() {
   });
 
   useEffect(() => {
-    if (quote) {
+    if (!isPending && isQuoteError &&  quote) {
       dispatch(setOutputTokenAmount(quote));
     }
-  }, [dispatch, quote]);
+  }, [dispatch, quote, isPending, isQuoteError]);
 
   const { data: outputTokenBalance } = useBalance({
     address,
@@ -133,9 +132,6 @@ export default function SwapClient() {
 
   useEffect(() => {
     if (outputTokenBalance && inputToken.evm) {
-      console.log("outputbal val ", outputTokenBalance.value);
-      console.log("outputtok evm ", outputToken.evm);
-      console.log("output address ", address);
       dispatch(
         setUserbalance({
           amount: Number(outputTokenBalance.value),
@@ -145,9 +141,6 @@ export default function SwapClient() {
     }
 
     if (inputTokenBalance && inputToken.evm) {
-      console.log("inputbal val ", inputTokenBalance.value);
-      console.log("inputtok evm ", inputToken.evm);
-      console.log("input address ", address);
       dispatch(
         setUserbalance({
           amount: Number(inputTokenBalance.value),
@@ -163,10 +156,6 @@ export default function SwapClient() {
     outputToken.evm,
     address,
   ]);
-
-  const handleInputAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setInputTokenAmount(Number(e.target.value)));
-  };
 
   if (isLoading) {
     return <div>Loading tokens...</div>;

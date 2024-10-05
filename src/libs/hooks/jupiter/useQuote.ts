@@ -22,7 +22,7 @@ export function useQuote({
   enabled,
 }: QuoteArgs) {
   return useQuery({
-    refetchInterval: 5000,
+    refetchInterval: 3000,
     enabled,
     queryKey: ["jupiterQuote", inputMint, outputMint, amount, slippageBps],
     queryFn: () =>
