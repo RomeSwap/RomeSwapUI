@@ -39,7 +39,7 @@ const initialState: SwapState = {
     svm: defaultOutputToken.address,
     ...defaultOutputToken,
   },
-  slippage: 1,
+  slippage: 0.5,
   feesPct: 0,
   tokenList: [],
 };
@@ -160,9 +160,8 @@ export const swapSlice = createSlice({
     },
     setOutputTokenAmount: (state, action: PayloadAction<QuoteResponse>) => {
       const wei = Number(action.payload.outAmount);
-      const human = wei / 10 ** state.outputToken.decimals;
 
-      state.outputToken.humanAmount = human;
+      state.outputToken.humanAmount = wei / 10 ** state.outputToken.decimals;
       state.outputToken.weiAmount = wei;
       state.quote = action.payload;
     },
