@@ -324,7 +324,7 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
               <p className="text-justify text-sm">
                 Output is estimated. You will receive at least{" "}
                 <span className="font-semibold text-secondary">
-                  {outputToken.humanAmount}
+                  {(outputToken.humanAmount * (1 - (quote?.slippageBps ?? 0) / 10000)).toPrecision(4)}
                 </span>{" "}
                 {outputToken.symbol} or the transaction will revert.
               </p>
