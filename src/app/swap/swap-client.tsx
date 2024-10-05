@@ -206,7 +206,7 @@ export default function SwapClient() {
       <SwapOutput />
       <SwapBtn
         confirmSwapModal={() => setIsConfirmSwapModal(!isConfirmSwapModal)}
-        isDisabled={outputToken.weiAmount === 0 || inputToken.weiAmount > (inputToken.userBalance ?? 0)}
+        isDisabled={outputToken.weiAmount === 0 || inputToken.weiAmount > (inputToken.userBalance ?? 0) * (10**inputToken.decimals)}
       />
       {isConfirmSwapModal && (
         <ConfirmSwap
