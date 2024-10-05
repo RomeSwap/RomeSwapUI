@@ -22,10 +22,9 @@ const neonProgram = new PublicKey(
   )
 );
 
-
 export {
-    ICSFlowMainnetAddress,
-    ERC20ForSplFactoryAddress,
-    contractPublicKey,
-    neonProgram
-}
+  ICSFlowMainnetAddress,
+  ERC20ForSplFactoryAddress,
+  contractPublicKey,
+  neonProgram,
+};

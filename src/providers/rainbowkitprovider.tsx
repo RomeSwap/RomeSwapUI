@@ -16,7 +16,7 @@ import {
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { createClient } from "viem";
-import {getClient} from "@wagmi/core"
+import { getClient } from "@wagmi/core";
 
 const connectors = connectorsForWallets(
   [
@@ -37,8 +37,8 @@ export const config = createConfig({
 });
 
 export const wagmiClient = getClient(config, {
-    chainId: neonMainnet.id
-})
+  chainId: neonMainnet.id,
+});
 
 const queryClient = new QueryClient();
 

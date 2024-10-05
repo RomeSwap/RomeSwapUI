@@ -28,13 +28,13 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} bg-background text-light antialiased`}
       >
-      <StoreProvider>
-        <RainBowKitCustomProvider>
-          <Navbar />
-          {children}
-          <BgEllipseSvgs />
-        </RainBowKitCustomProvider>
-      </StoreProvider>
+        <StoreProvider>
+          <RainBowKitCustomProvider>
+            <Navbar />
+            {children}
+            <BgEllipseSvgs />
+          </RainBowKitCustomProvider>
+        </StoreProvider>
       </body>
     </html>
   );

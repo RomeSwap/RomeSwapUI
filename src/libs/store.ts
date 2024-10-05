@@ -1,15 +1,14 @@
-import {configureStore} from '@reduxjs/toolkit'
-import swapReducer from "@/libs/features/swap/swapSlice"
+import { configureStore } from "@reduxjs/toolkit";
+import swapReducer from "@/libs/features/swap/swapSlice";
 
 export const makeStore = () => {
-    return configureStore({
+  return configureStore({
     reducer: {
-        swap: swapReducer
+      swap: swapReducer,
     },
+  });
+};
 
-    })
-}
-
-export type AppStore = ReturnType<typeof makeStore>
-export type RootState = ReturnType<AppStore['getState']>
-export type AppDispatch = AppStore['dispatch']
+export type AppStore = ReturnType<typeof makeStore>;
+export type RootState = ReturnType<AppStore["getState"]>;
+export type AppDispatch = AppStore["dispatch"];

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { Address } from "viem";
 import { PublicKey, AccountMeta } from "@solana/web3.js";
-import {neonProgram } from "./constants"
+import { neonProgram } from "./constants";
 
 const publicKeyToBytes32 = (solAddress: string) => {
   return ethers.zeroPadValue(
@@ -9,7 +9,6 @@ const publicKeyToBytes32 = (solAddress: string) => {
     32
   ) as Address;
 };
-
 
 const calculateTokenAccount = (tokenAddr: Address, userAddr: Address) => {
   const neonAccountAddressBytes = Buffer.concat([
@@ -37,9 +36,7 @@ const prepareInstructionData = (data: Buffer): Address => {
     packedInstructionData) as Address;
 };
 
-const prepareInstructionAccounts = (
-  accounts: AccountMeta[]
-): Address => {
+const prepareInstructionAccounts = (accounts: AccountMeta[]): Address => {
   let encodeKeys = "";
 
   for (const account of accounts) {
@@ -62,8 +59,8 @@ const prepareInstructionAccounts = (
 };
 
 export {
-    calculateTokenAccount,
-    prepareInstructionData,
-    prepareInstructionAccounts,
-    publicKeyToBytes32
-}
+  calculateTokenAccount,
+  prepareInstructionData,
+  prepareInstructionAccounts,
+  publicKeyToBytes32,
+};

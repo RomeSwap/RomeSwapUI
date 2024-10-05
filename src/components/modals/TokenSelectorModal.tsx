@@ -6,22 +6,26 @@ import walletTruncatizer from "@/libs/walletTruncatizer";
 import { GoXCircleFill } from "react-icons/go";
 import { IoSearchSharp } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "@/libs/hooks/redux/redux";
-import { fetchSPLAddress, selectTokenList, setToken } from "@/libs/features/swap/swapSlice";
+import {
+  fetchSPLAddress,
+  selectTokenList,
+  setToken,
+} from "@/libs/features/swap/swapSlice";
 
 const TokenSelectorModal = ({
-    setType,
+  setType,
   isLoading,
-  onClose
+  onClose,
 }: TokenSelectorModalProps) => {
-    const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const [search, setSearch] = useState("");
-  const allTokens = useAppSelector(selectTokenList)
+  const allTokens = useAppSelector(selectTokenList);
 
   const onSelect = (token: Token) => {
-    dispatch(setToken({token: token, type: setType}))
-    dispatch(fetchSPLAddress({solAddress: token.address, selType: setType}))
-    onClose()
-  }
+    dispatch(setToken({ token: token, type: setType }));
+    dispatch(fetchSPLAddress({ solAddress: token.address, selType: setType }));
+    onClose();
+  };
 
   const filteredTokens = useCallback(() => {
     return allTokens.filter(

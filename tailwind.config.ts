@@ -18,7 +18,7 @@ const config: Config = {
         dark: "#141721",
         background: "#171821",
         error: "#991b1b",
-        pending: "#FFDE21"
+        pending: "#FFDE21",
       },
     },
   },

@@ -5,11 +5,11 @@ import CustomConnectWalletBtn from "../button/CustomConnectWalletBtn";
 import clsx from "clsx";
 
 const SwapBtn = ({
-	confirmSwapModal,
-	isDisabled,
+  confirmSwapModal,
+  isDisabled,
 }: {
-	confirmSwapModal: () => void;
-	isDisabled: boolean;
+  confirmSwapModal: () => void;
+  isDisabled: boolean;
 }) => {
   const { isConnected } = useAccount();
 
@@ -17,19 +17,19 @@ const SwapBtn = ({
     return <CustomConnectWalletBtn className={clsx("w-full")} />;
   }
 
-	return (
-		<button
-			className={clsx(
-				"w-full text-center bg-primary font-semibold text-dark py-2 lg:py-3 rounded-lg",
-				isDisabled ? " cursor-not-allowed" : "",
-			)}
-			type="button"
-			onClick={confirmSwapModal}
-			disabled={isDisabled}
-		>
-			Swap
-		</button>
-	);
+  return (
+    <button
+      className={clsx(
+        "w-full text-center bg-primary font-semibold text-dark py-2 lg:py-3 rounded-lg",
+        isDisabled ? " cursor-not-allowed" : ""
+      )}
+      type="button"
+      onClick={confirmSwapModal}
+      disabled={isDisabled}
+    >
+      Swap
+    </button>
+  );
 };
 
 export default SwapBtn;

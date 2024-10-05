@@ -9,7 +9,7 @@ import { useAppDispatch } from "@/libs/hooks/redux/redux";
 import { setInputTokenAmount } from "@/libs/features/swap/swapSlice";
 
 interface SwapInputComponentProps {
-  setType: "input" | "output"
+  setType: "input" | "output";
   token: Token;
   amount: number;
   defaultToken?: Token;
@@ -31,19 +31,19 @@ const SwapInputComponent = ({
   customBg,
   readOnly,
   balance,
-  setType
+  setType,
 }: SwapInputComponentProps) => {
   const [imageError, setImageError] = useState(false);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const toggleSelector = () => setIsSelectorOpen(!isSelectorOpen);
 
   const handleAmountChange = (e: any) => {
-      if (setType == "input") {
-          dispatch(setInputTokenAmount(Number(e.target.value)))
-      }
-  }
+    if (setType == "input") {
+      dispatch(setInputTokenAmount(Number(e.target.value)));
+    }
+  };
 
   return (
     <div className={clsx("w-full flex flex-col p-4 rounded-lg", customBg)}>

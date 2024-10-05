@@ -31,7 +31,7 @@ export const useTokenList = () =>
               logoURI: isValidLogoURI(token.logoURI)
                 ? token.logoURI
                 : DEFAULT_LOGO_URI,
-            }),
+            })
           );
         }),
   });

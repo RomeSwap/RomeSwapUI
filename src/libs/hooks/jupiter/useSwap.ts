@@ -13,7 +13,7 @@ import { Transaction } from "@solana/web3.js";
 export const fetchSwapInstruction = async (
   quote: QuoteResponse,
   outputTokenAddr: Address,
-  userAddr: Address,
+  userAddr: Address
 ) =>
   jupiterApiClient
     .swapPost({
@@ -24,7 +24,7 @@ export const fetchSwapInstruction = async (
         asLegacyTransaction: true,
         destinationTokenAccount: calculateTokenAccount(
           outputTokenAddr,
-          userAddr,
+          userAddr
         ),
       },
     })
@@ -36,7 +36,7 @@ export const fetchSwapInstruction = async (
         swapTx.instructions[swapTx.instructions.length - 1];
 
       const programId = publicKeyToBytes32(
-        swapInstruction.programId.toBase58(),
+        swapInstruction.programId.toBase58()
       );
       const data = prepareInstructionData(swapInstruction.data);
       const accounts = prepareInstructionAccounts(swapInstruction.keys);

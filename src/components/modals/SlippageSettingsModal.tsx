@@ -12,8 +12,8 @@ interface SlippageSettingsProps {
 const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
   onClose,
 }) => {
-    const dispatch = useAppDispatch()
-    const slippage = useAppSelector(selectSlippage)
+  const dispatch = useAppDispatch();
+  const slippage = useAppSelector(selectSlippage);
   const slippagePercentages = [0.1, 0.5, 1];
   const maxSlippageAllowed = 49;
   const [warningMsg, setWarningMsg] = useState<string | null>(null);
@@ -26,7 +26,7 @@ const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
 
   const handleSlippageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
-    dispatch(setSlippage(isNaN(value) ? 1 : value))
+    dispatch(setSlippage(isNaN(value) ? 1 : value));
   };
 
   useEffect(() => {

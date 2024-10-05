@@ -10,7 +10,18 @@ import { useAccount, useBalance } from "wagmi";
 import { useQuote } from "@/libs/hooks/jupiter/useQuote";
 import { useTokenList } from "@/libs/tokens";
 import { useAppDispatch, useAppSelector } from "@/libs/hooks/redux/redux";
-import { fetchSPLAddress, selectInputToken, selectOutputToken, selectSlippage, setInputTokenAmount, setOutputTokenAmount, setToken, setTokenList, setUserbalance, swapInputOutput } from "@/libs/features/swap/swapSlice";
+import {
+  fetchSPLAddress,
+  selectInputToken,
+  selectOutputToken,
+  selectSlippage,
+  setInputTokenAmount,
+  setOutputTokenAmount,
+  setToken,
+  setTokenList,
+  setUserbalance,
+  swapInputOutput,
+} from "@/libs/features/swap/swapSlice";
 import SwapInput from "@/components/input/SwapInput";
 import SwapOutput from "@/components/input/SwapOutput";
 import SwapBtn from "@/components/button/SwapBtn";
@@ -19,30 +30,29 @@ import ConfirmSwap from "@/components/modals/ConfirmSwap";
 export default function SwapClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const [tokens, setTokens] = useState<Token[]>([]);
 
   const [isSlippage, setIsSlippage] = useState(false);
-  const [isConfirmSwapModal, setIsConfirmSwapModal] = useState(false)
+  const [isConfirmSwapModal, setIsConfirmSwapModal] = useState(false);
 
-  const {data, isSuccess, isLoading, isError, error} = useTokenList()
-
-  useEffect(() => {
-      if (isSuccess && data) {
-        dispatch(setTokenList(data))
-      }
-  }, [dispatch, data, isSuccess])
-
- const inputToken = useAppSelector(selectInputToken)
- const outputToken = useAppSelector(selectOutputToken)
+  const { data, isSuccess, isLoading, isError, error } = useTokenList();
 
   useEffect(() => {
-      if (isSuccess) {
-        setTokens([defaultInputToken, ...data]);
-      }
+    if (isSuccess && data) {
+      dispatch(setTokenList(data));
+    }
+  }, [dispatch, data, isSuccess]);
+
+  const inputToken = useAppSelector(selectInputToken);
+  const outputToken = useAppSelector(selectOutputToken);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setTokens([defaultInputToken, ...data]);
+    }
   }, [data, isSuccess]);
-
 
   useEffect(() => {
     if (tokens.length > 0) {
@@ -52,16 +62,30 @@ export default function SwapClient() {
         tokens.find((t) => t.address === inputCurrency) || defaultInputToken;
       const foundOutputToken =
         tokens.find((t) => t.address === outputCurrency) || defaultOutputToken;
-      dispatch(setToken({
+      dispatch(
+        setToken({
           token: foundInputToken,
-          type: "input"
-      }))
-      dispatch(fetchSPLAddress({solAddress: foundInputToken.address, selType: "input"}))
-      dispatch(setToken({
+          type: "input",
+        })
+      );
+      dispatch(
+        fetchSPLAddress({
+          solAddress: foundInputToken.address,
+          selType: "input",
+        })
+      );
+      dispatch(
+        setToken({
           token: foundOutputToken,
-          type: "output"
-      }))
-      dispatch(fetchSPLAddress({solAddress: foundOutputToken.address, selType: "output"}))
+          type: "output",
+        })
+      );
+      dispatch(
+        fetchSPLAddress({
+          solAddress: foundOutputToken.address,
+          selType: "output",
+        })
+      );
     }
   }, [dispatch, searchParams, tokens]);
 
@@ -75,55 +99,67 @@ export default function SwapClient() {
 
   const { address } = useAccount();
 
-  const slippage = useAppSelector(selectSlippage)
+  const slippage = useAppSelector(selectSlippage);
 
   const { data: quote, isPending } = useQuote({
     inputMint: inputToken.svm,
     outputMint: outputToken.svm,
     amount: Number(inputToken.weiAmount),
     slippageBps: slippage,
-    enabled: Number(inputToken.weiAmount) != 0
+    enabled: Number(inputToken.weiAmount) != 0,
   });
 
-    useEffect(() => {
-        if (quote) {
-            dispatch(setOutputTokenAmount(quote))
-        }
-    }, [dispatch, quote])
+  useEffect(() => {
+    if (quote) {
+      dispatch(setOutputTokenAmount(quote));
+    }
+  }, [dispatch, quote]);
 
-const {
-    data: outputTokenBalance,
-} = useBalance({
+  const { data: outputTokenBalance } = useBalance({
     address,
-    token: outputToken.evm
-})
+    token: outputToken.evm,
+  });
 
-const {
-    data: inputTokenBalance,
-} = useBalance({
+  const { data: inputTokenBalance } = useBalance({
     address,
-    token: inputToken.evm
-})
+    token: inputToken.evm,
+  });
 
-    useEffect(() => {
-        if (outputTokenBalance && inputToken.evm) {
-            console.log("outputbal val ", outputTokenBalance.value)
-            console.log("outputtok evm ", outputToken.evm)
-            console.log("output address ", address)
-            dispatch(setUserbalance({amount: Number(outputTokenBalance.value), type: "output"}))
-        }
+  useEffect(() => {
+    if (outputTokenBalance && inputToken.evm) {
+      console.log("outputbal val ", outputTokenBalance.value);
+      console.log("outputtok evm ", outputToken.evm);
+      console.log("output address ", address);
+      dispatch(
+        setUserbalance({
+          amount: Number(outputTokenBalance.value),
+          type: "output",
+        })
+      );
+    }
 
-        if (inputTokenBalance && inputToken.evm) {
-            console.log("inputbal val ", inputTokenBalance.value)
-            console.log("inputtok evm ", inputToken.evm)
-            console.log("input address ", address)
-            dispatch(setUserbalance({amount: Number(inputTokenBalance.value), type: "input"}))
-        }
-
-    }, [dispatch, outputTokenBalance, inputTokenBalance, inputToken.evm, outputToken.evm, address])
+    if (inputTokenBalance && inputToken.evm) {
+      console.log("inputbal val ", inputTokenBalance.value);
+      console.log("inputtok evm ", inputToken.evm);
+      console.log("input address ", address);
+      dispatch(
+        setUserbalance({
+          amount: Number(inputTokenBalance.value),
+          type: "input",
+        })
+      );
+    }
+  }, [
+    dispatch,
+    outputTokenBalance,
+    inputTokenBalance,
+    inputToken.evm,
+    outputToken.evm,
+    address,
+  ]);
 
   const handleInputAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      dispatch(setInputTokenAmount(Number(e.target.value)))
+    dispatch(setInputTokenAmount(Number(e.target.value)));
   };
 
   if (isLoading) {
@@ -172,13 +208,16 @@ const {
         </button>
       </div>
       {/* Output */}
-      <SwapOutput/>
-      <SwapBtn confirmSwapModal={() => setIsConfirmSwapModal(!isConfirmSwapModal)} isDisabled={inputToken.weiAmount == 0} />
+      <SwapOutput />
+      <SwapBtn
+        confirmSwapModal={() => setIsConfirmSwapModal(!isConfirmSwapModal)}
+        isDisabled={inputToken.weiAmount == 0}
+      />
       {isConfirmSwapModal && (
-          <ConfirmSwap
-            onClose={() => setIsConfirmSwapModal(!setIsConfirmSwapModal)}
-            price={0}
-          />
+        <ConfirmSwap
+          onClose={() => setIsConfirmSwapModal(!setIsConfirmSwapModal)}
+          price={0}
+        />
       )}
     </div>
   );
