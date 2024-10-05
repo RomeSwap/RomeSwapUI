@@ -351,19 +351,20 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
                 <div>{quote?.platformFee?.amount ?? 0} SOL</div>
               </div>
             </div>
-            {!hasAllowance && (
+
+            {!hasSpl && (
+              <SwapButton
+                handleSwap={handleSplDeployment}
+                text="Create ERC20 wrapper"
+                disabled={swapStep !== "idle" && swapStep !== "error"}
+              />
+            )}
+
+            {hasSpl && !hasAllowance && (
               <SwapButton
                 handleSwap={handleApproval}
                 text="Approve Allowance"
                 disabled={swapStep != "idle" && swapStep !== "error"}
-              />
-            )}
-
-            {hasAllowance && !hasSpl && (
-              <SwapButton
-                handleSwap={handleSplDeployment}
-                text="Deploy SPL"
-                disabled={swapStep !== "idle" && swapStep !== "error"}
               />
             )}
 
