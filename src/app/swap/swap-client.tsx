@@ -8,7 +8,6 @@ import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
 import { PiArrowsDownUpBold } from "react-icons/pi";
 import { useAccount, useBalance } from "wagmi";
 import { useQuote } from "@/libs/hooks/jupiter/useQuote";
-import { useTokenList } from "@/libs/tokens";
 import { useAppDispatch, useAppSelector } from "@/libs/hooks/redux/redux";
 import {
   fetchSPLAddress,
@@ -25,6 +24,7 @@ import SwapInput from "@/components/input/SwapInput";
 import SwapOutput from "@/components/input/SwapOutput";
 import SwapBtn from "@/components/button/SwapBtn";
 import ConfirmSwap from "@/components/modals/ConfirmSwap";
+import { useTokenList } from "@/libs/tokens";
 
 export default function SwapClient() {
   const router = useRouter();
@@ -109,7 +109,7 @@ export default function SwapClient() {
   });
 
   useEffect(() => {
-    if (!isPending && isQuoteError &&  quote) {
+    if (!isPending && !isQuoteError &&  quote) {
       dispatch(setOutputTokenAmount(quote));
     }
   }, [dispatch, quote, isPending, isQuoteError]);
