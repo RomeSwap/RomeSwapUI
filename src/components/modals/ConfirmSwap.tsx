@@ -167,7 +167,7 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
   }, [outputToken.evm]);
 
   const handleApproval = useCallback(() => {
-    if (inputToken.evm) {
+    if (inputToken.evm && inputToken.weiAmount) {
       setSwapStep("approving");
       writeContract({
         abi: ERC20ForSPLAbi,
@@ -193,7 +193,7 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
   }, [outputToken.evm, outputToken.svm, writeContract]);
 
   const proceedToSwap = useCallback(async () => {
-    if (!quote || !inputToken.evm || !outputToken.evm || !address) return;
+    if (!quote || !inputToken.evm || !outputToken.evm || !address || !inputToken.weiAmount) return;
 
     setSwapStep("swapping");
     console.log("Executing swap");
@@ -257,6 +257,8 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
   useEffect(() => {
     handleSwap();
   }, [handleSwap]);
+
+  const minimumReceived = ((outputToken.humanAmount ?? 0) * (1 - (quote?.slippageBps ?? 0) / 10000)).toPrecision(4)
 
   return (
     <div>
@@ -324,7 +326,7 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
               <p className="text-justify text-sm">
                 Output is estimated. You will receive at least{" "}
                 <span className="font-semibold text-secondary">
-                  {(outputToken.humanAmount * (1 - (quote?.slippageBps ?? 0) / 10000)).toPrecision(4)}
+                  {minimumReceived}
                 </span>{" "}
                 {outputToken.symbol} or the transaction will revert.
               </p>
@@ -338,7 +340,7 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
               </div>
               <div className="flex items-center justify-between">
                 <div>Minimum received</div>
-                <div>{outputToken.humanAmount}</div>
+                <div>{minimumReceived}</div>
               </div>
               <div className="flex items-center justify-between">
                 <div>Price Impact</div>
