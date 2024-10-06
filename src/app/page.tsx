@@ -5,7 +5,6 @@ import {
 	clashGroteskBold,
 	clashGroteskRegular,
 	coolveticaRegular,
-	poppins,
 } from "@/app/fonts/fonts";
 
 export default function Home() {
