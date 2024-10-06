@@ -7,7 +7,7 @@ type NotEVMAddress<T extends string> = T extends Address ? never : T;
 interface QuoteArgs {
   inputMint: NotEVMAddress<string>;
   outputMint: NotEVMAddress<string>;
-  amount: number;
+  amount?: number;
   slippage: number;
   enabled: boolean;
 }
@@ -24,6 +24,8 @@ export function useQuote({
   return useQuery({
     refetchInterval: 3000,
     enabled,
+    // no cache for quotes
+    gcTime: 0,
     queryKey: ["jupiterQuote", inputMint, outputMint, amount, slippage],
     queryFn: () =>
       jupiterApiClient.quoteGet({

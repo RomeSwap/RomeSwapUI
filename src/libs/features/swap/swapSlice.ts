@@ -9,8 +9,8 @@ import { publicKeyToBytes32 } from "@/libs/hooks/neon/utils";
 import { config } from "@/providers/rainbowkitprovider";
 
 export interface SwapToken extends Token {
-  humanAmount: number;
-  weiAmount: number;
+  humanAmount?: number;
+  weiAmount?: number;
   userBalance?: number;
 
   evm?: Address;
@@ -28,14 +28,10 @@ export interface SwapState {
 
 const initialState: SwapState = {
   inputToken: {
-    humanAmount: 0,
-    weiAmount: 0,
     svm: defaultInputToken.address,
     ...defaultInputToken,
   },
   outputToken: {
-    humanAmount: 0,
-    weiAmount: 0,
     svm: defaultOutputToken.address,
     ...defaultOutputToken,
   },
@@ -54,7 +50,6 @@ export const fetchSPLAddress = createAsyncThunk(
     selType: "input" | "output";
   }) => {
     try {
-      console.log(solAddress);
       const data = await readContract(config, {
         address: ERC20ForSplFactoryAddress,
         functionName: "getErc20ForSpl",
@@ -102,13 +97,11 @@ export const swapSlice = createSlice({
 
       const swapToken: SwapToken = {
         svm: ptoken.address,
-        humanAmount: 0,
-        weiAmount: 0,
         ...ptoken,
       };
       state.quote = undefined;
-      state.outputToken.humanAmount = 0;
-      state.outputToken.weiAmount = 0;
+      state.outputToken.humanAmount = undefined
+      state.outputToken.weiAmount = undefined
 
       switch (action.payload.type) {
         case "input":
@@ -125,8 +118,8 @@ export const swapSlice = createSlice({
         state.inputToken,
       ];
       state.quote = undefined;
-      state.outputToken.humanAmount = 0;
-      state.outputToken.weiAmount = 0;
+      state.outputToken.humanAmount = undefined;
+      state.outputToken.weiAmount = undefined;
     },
     setUserbalance: (
       state,
@@ -149,14 +142,14 @@ export const swapSlice = createSlice({
           return;
       }
     },
-    setInputTokenAmount: (state, action: PayloadAction<number>) => {
-      const wei = action.payload * 10 ** state.inputToken.decimals;
+    setInputTokenAmount: (state, action: PayloadAction<number|undefined>) => {
+      const wei = action.payload && action.payload * 10 ** state.inputToken.decimals;
 
       state.inputToken.humanAmount = action.payload;
       state.inputToken.weiAmount = wei;
       state.quote = undefined;
-      state.outputToken.humanAmount = 0;
-      state.outputToken.weiAmount = 0;
+      state.outputToken.humanAmount = undefined;
+      state.outputToken.weiAmount = undefined;
     },
     setOutputTokenAmount: (state, action: PayloadAction<QuoteResponse>) => {
       const wei = Number(action.payload.outAmount);
@@ -181,8 +174,8 @@ export const swapSlice = createSlice({
     setSlippage: (state, action: PayloadAction<number>) => {
       state.slippage = action.payload;
       state.quote = undefined;
-      state.outputToken.humanAmount = 0;
-      state.outputToken.weiAmount = 0;
+      state.outputToken.humanAmount = undefined;
+      state.outputToken.weiAmount = undefined;
     },
   },
   selectors: {

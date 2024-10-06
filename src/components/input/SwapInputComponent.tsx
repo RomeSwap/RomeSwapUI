@@ -11,7 +11,7 @@ import { setInputTokenAmount } from "@/libs/features/swap/swapSlice";
 interface SwapInputComponentProps {
   setType: "input" | "output";
   token: Token;
-  amount: number;
+  amount?: number;
   defaultToken?: Token;
   isLoading: boolean;
   onSelect: (token: Token) => void;
@@ -78,17 +78,16 @@ const SwapInputComponent = ({
           </button>
           <div className="text-xs text-grayText">
             <div className="">Balance</div>
-            <div className="">{balance ?? 0}</div>
+            <div className="">{balance ?? "loading..."}</div>
             <button type="button">MAX</button>
           </div>
         </div>
         <div className="flex items-center justify-between">
           <input
-            type="number"
-            min={0}
+            type="text"
             className="p-2 w-full bg-transparent text-2xl placeholder:text-light/30 outline-none appearance-none"
             placeholder="0.00"
-            value={amount}
+            defaultValue={amount}
             onChange={handleAmountChange}
             aria-label={`Enter amount of ${token.symbol}`}
             readOnly={readOnly ?? false}
