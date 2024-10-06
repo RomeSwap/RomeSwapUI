@@ -17,7 +17,6 @@ import {
   setOutputTokenAmount,
   setToken,
   setTokenList,
-  setUserbalance,
   swapInputOutput,
 } from "@/libs/features/swap/swapSlice";
 import SwapInput from "@/components/input/SwapInput";
@@ -32,6 +31,8 @@ export default function SwapClient() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const inputCurrency = searchParams.get("inputCurrency");
+  const outputCurrency = searchParams.get("outputCurrency");
   const { address } = useAccount();
   const dispatch = useAppDispatch();
 
@@ -52,22 +53,6 @@ export default function SwapClient() {
     enabled: inputToken.weiAmount !== undefined && inputToken.weiAmount != 0,
   });
 
-  const { data: outputTokenBalance } = useBalance({
-    address,
-    token: outputToken.evm,
-    query: {
-      refetchInterval: 5000,
-    },
-  });
-
-  const { data: inputTokenBalance } = useBalance({
-    address,
-    token: inputToken.evm,
-    query: {
-      refetchInterval: 5000,
-    },
-  });
-
   useEffect(() => {
     if (tokenQuery.isSuccess && tokenQuery.data) {
       dispatch(setTokenList(tokenQuery.data));
@@ -76,14 +61,9 @@ export default function SwapClient() {
 
   useEffect(() => {
     if (tokenQuery.data && tokenQuery.data.length > 0) {
-      const inputCurrency = searchParams.get("inputCurrency");
-      const outputCurrency = searchParams.get("outputCurrency");
       const foundInputToken =
         tokenQuery.data.find((t) => t.address === inputCurrency) ||
         defaultInputToken;
-      const foundOutputToken =
-        tokenQuery.data.find((t) => t.address === outputCurrency) ||
-        defaultOutputToken;
       dispatch(
         setToken({
           token: foundInputToken,
@@ -96,6 +76,14 @@ export default function SwapClient() {
           selType: "input",
         }),
       );
+    }
+  }, [dispatch, inputCurrency, tokenQuery.data]);
+
+  useEffect(() => {
+    if (tokenQuery.data && tokenQuery.data.length > 0) {
+      const foundOutputToken =
+        tokenQuery.data.find((t) => t.address === outputCurrency) ||
+        defaultOutputToken;
       dispatch(
         setToken({
           token: foundOutputToken,
@@ -109,48 +97,27 @@ export default function SwapClient() {
         }),
       );
     }
-  }, [dispatch, searchParams, tokenQuery.data]);
+  }, [dispatch, outputCurrency, tokenQuery.data]);
 
   useEffect(() => {
     const params = new URLSearchParams();
     params.set("inputCurrency", inputToken.svm);
+
+    router.push(`/swap?${params.toString()}`);
+  }, [inputToken, router]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
     params.set("outputCurrency", outputToken.svm);
 
     router.push(`/swap?${params.toString()}`);
-  }, [inputToken, outputToken, router]);
+  }, [outputToken, router]);
 
   useEffect(() => {
     if (!isPending && !isQuoteError && quote) {
       dispatch(setOutputTokenAmount(quote));
     }
   }, [dispatch, quote, isPending, isQuoteError]);
-
-  useEffect(() => {
-    if (outputTokenBalance && inputToken.evm) {
-      dispatch(
-        setUserbalance({
-          amount: Number(outputTokenBalance.value),
-          type: "output",
-        }),
-      );
-    }
-
-    if (inputTokenBalance && inputToken.evm) {
-      dispatch(
-        setUserbalance({
-          amount: Number(inputTokenBalance.value),
-          type: "input",
-        }),
-      );
-    }
-  }, [
-    dispatch,
-    outputTokenBalance,
-    inputTokenBalance,
-    inputToken.evm,
-    outputToken.evm,
-    address,
-  ]);
 
   return (
     <div className="p-5 bg-grayBg rounded-2xl max-w-xs lg:max-w-2xl mx-auto flex flex-col ">
