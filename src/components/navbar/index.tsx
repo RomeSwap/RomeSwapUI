@@ -1,23 +1,18 @@
 "use client";
 
-import React, { useEffect } from "react";
-// Next
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-
-// Data
 import { navLinksData } from "./navlinksData";
 import CustomConnectWalletBtn from "@/components/button/CustomConnectWalletBtn";
 import { useState } from "react";
-
-// Icons
-import { IoChevronDown, IoHome, IoSwapHorizontal } from "react-icons/io5";
+import { IoChevronDown, IoHome } from "react-icons/io5";
 import { FaCircle } from "react-icons/fa6";
 import clsx from "clsx";
 
+import { clashGroteskBold } from "@/app/fonts/fonts";
+
 export default function Navbar() {
-	// States
 	const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
 
 	const pathname = usePathname();
@@ -53,22 +48,18 @@ export default function Navbar() {
 		<header className="fixed z-40 top-0 left-0 bg-black text-light w-full h-[65px] lg:h-[70px] lg:overflow-hidden">
 			<nav className="relative flex items-center justify-between h-full max-w-[300px] md:max-w-2xl lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
 				<Link href={"/"}>
-					<div className="block lg:hidden">
+					<div className="flex items-center gap-x-2">
 						<Image
-							src={"/loremswap-short.svg"}
+							src={"/logo.png"}
 							width={32}
 							height={32}
-							alt="Loremswap Logo"
+							alt="RomeSwap Logo"
 						/>
-					</div>
-					{/* Desktop */}
-					<div className="hidden lg:block">
-						<Image
-							src={"/loremswap-logo.svg"}
-							width={231}
-							height={44}
-							alt="Loremswap Logo"
-						/>
+						<div
+							className={`${clashGroteskBold.className} hidden lg:block font-bold text-3xl`}
+						>
+							RomeSwap
+						</div>
 					</div>
 				</Link>
 				<div className="relative flex lg:hidden w-[129px] bg-dark rounded-lg py-2.5 px-3">
