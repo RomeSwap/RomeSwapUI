@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Image from "next/image";
 import walletTruncatizer from "@/libs/walletTruncatizer";
 import { GoXCircleFill } from "react-icons/go";
@@ -12,6 +12,10 @@ import {
   setToken,
 } from "@/libs/features/swap/swapSlice";
 
+// if we render all tokens things get slow, so we can either set a max display
+// limit or add a "virtualized" list...
+const TOKEN_LIST_LEN = 100;
+
 const TokenSelectorModal = ({
   setType,
   isLoading,
@@ -21,17 +25,24 @@ const TokenSelectorModal = ({
   const [search, setSearch] = useState("");
   const allTokens = useAppSelector(selectTokenList);
 
-  const onSelect = (token: Token) => {
-    dispatch(setToken({ token: token, type: setType }));
-    dispatch(fetchSPLAddress({ solAddress: token.address, selType: setType }));
-    onClose();
-  };
+  const onSelect = useCallback(
+    (token: Token) => {
+      dispatch(setToken({ token: token, type: setType }));
+      dispatch(
+        fetchSPLAddress({ solAddress: token.address, selType: setType }),
+      );
+      onClose();
+    },
+    [dispatch, setType, onClose],
+  );
 
-  const filteredTokens = useCallback(() => {
+  const filteredTokens = useMemo(() => {
+    const lowerSearch = search.toLowerCase();
     return allTokens.filter(
       (token) =>
-        token.name.toLowerCase().includes(search.toLowerCase()) ||
-        token.symbol.toLowerCase().includes(search.toLowerCase())
+        token.name.toLowerCase().includes(lowerSearch) ||
+        token.symbol.toLowerCase().includes(lowerSearch) ||
+        token.address.toLowerCase().includes(lowerSearch),
     );
   }, [allTokens, search]);
 
@@ -71,10 +82,10 @@ const TokenSelectorModal = ({
         <div className="overflow-y-auto h-[80vh]">
           {isLoading ? (
             <div className="text-center">Loading tokens...</div>
-          ) : allTokens.length > 0 ? (
-            filteredTokens().map((token, idx) => (
+          ) : filteredTokens.length > 0 ? (
+            filteredTokens.slice(0, TOKEN_LIST_LEN).map((token) => (
               <button
-                key={idx}
+                key={token.address}
                 className="flex items-center justify-between w-full text-left p-2 hover:bg-grayText/30 rounded"
                 onClick={() => onSelect(token)}
               >
@@ -84,14 +95,14 @@ const TokenSelectorModal = ({
                       <Image
                         className="w-full h-full"
                         src={token.logoURI}
-                        // src={token.logoURI!}
                         width={46}
                         height={46}
                         alt={`${token.name} logo`}
+                        loading="lazy"
                       />
                     )}
                   </div>
-                  <div className="flex flex-col ">
+                  <div className="flex flex-col">
                     <div className="font-bold">{token.symbol}</div>
                     <div className="text-xs text-gray-500">
                       {walletTruncatizer(token.address)}
