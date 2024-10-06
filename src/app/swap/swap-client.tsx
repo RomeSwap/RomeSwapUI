@@ -24,95 +24,33 @@ import SwapInput from "@/components/input/SwapInput";
 import SwapOutput from "@/components/input/SwapOutput";
 import SwapBtn from "@/components/button/SwapBtn";
 import ConfirmSwap from "@/components/modals/ConfirmSwap";
-import { useTokenList } from "@/libs/tokens";
+import { useGetVerifiedTokensQuery } from "@/libs/features/jupiter/tokenSlice";
 
 export default function SwapClient() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const dispatch = useAppDispatch();
-
-  const [tokens, setTokens] = useState<Token[]>([]);
-
   const [isSlippage, setIsSlippage] = useState(false);
   const [isConfirmSwapModal, setIsConfirmSwapModal] = useState(false);
 
-  const { data, isSuccess, isLoading, isError, error } = useTokenList();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { address } = useAccount();
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (isSuccess && data) {
-      dispatch(setTokenList(data));
-    }
-  }, [dispatch, data, isSuccess]);
-
+  const tokenQuery = useGetVerifiedTokensQuery();
   const inputToken = useAppSelector(selectInputToken);
   const outputToken = useAppSelector(selectOutputToken);
-
-  useEffect(() => {
-    if (isSuccess) {
-      setTokens([defaultInputToken, ...data]);
-    }
-  }, [data, isSuccess]);
-
-  useEffect(() => {
-    if (tokens.length > 0) {
-      const inputCurrency = searchParams.get("inputCurrency");
-      const outputCurrency = searchParams.get("outputCurrency");
-      const foundInputToken =
-        tokens.find((t) => t.address === inputCurrency) || defaultInputToken;
-      const foundOutputToken =
-        tokens.find((t) => t.address === outputCurrency) || defaultOutputToken;
-      dispatch(
-        setToken({
-          token: foundInputToken,
-          type: "input",
-        })
-      );
-      dispatch(
-        fetchSPLAddress({
-          solAddress: foundInputToken.address,
-          selType: "input",
-        })
-      );
-      dispatch(
-        setToken({
-          token: foundOutputToken,
-          type: "output",
-        })
-      );
-      dispatch(
-        fetchSPLAddress({
-          solAddress: foundOutputToken.address,
-          selType: "output",
-        })
-      );
-    }
-  }, [dispatch, searchParams, tokens]);
-
-  useEffect(() => {
-    const params = new URLSearchParams();
-    params.set("inputCurrency", inputToken.svm);
-    params.set("outputCurrency", outputToken.svm);
-
-    router.push(`/swap?${params.toString()}`);
-  }, [inputToken, outputToken, router]);
-
-  const { address } = useAccount();
-
   const slippage = useAppSelector(selectSlippage);
 
-  const { data: quote,isError: isQuoteError, isPending } = useQuote({
+  const {
+    data: quote,
+    isError: isQuoteError,
+    isPending,
+  } = useQuote({
     inputMint: inputToken.svm,
     outputMint: outputToken.svm,
-    amount: Number(inputToken.weiAmount),
+    amount: inputToken.weiAmount,
     slippage,
-    enabled: Number(inputToken.weiAmount) != 0,
+    enabled: inputToken.weiAmount !== undefined && inputToken.weiAmount != 0,
   });
-
-  useEffect(() => {
-    if (!isPending && !isQuoteError &&  quote) {
-      dispatch(setOutputTokenAmount(quote));
-    }
-  }, [dispatch, quote, isPending, isQuoteError]);
 
   const { data: outputTokenBalance } = useBalance({
     address,
@@ -131,12 +69,69 @@ export default function SwapClient() {
   });
 
   useEffect(() => {
+    if (tokenQuery.isSuccess && tokenQuery.data) {
+      dispatch(setTokenList(tokenQuery.data));
+    }
+  }, [dispatch, tokenQuery.data, tokenQuery.isSuccess]);
+
+  useEffect(() => {
+    if (tokenQuery.data && tokenQuery.data.length > 0) {
+      const inputCurrency = searchParams.get("inputCurrency");
+      const outputCurrency = searchParams.get("outputCurrency");
+      const foundInputToken =
+        tokenQuery.data.find((t) => t.address === inputCurrency) ||
+        defaultInputToken;
+      const foundOutputToken =
+        tokenQuery.data.find((t) => t.address === outputCurrency) ||
+        defaultOutputToken;
+      dispatch(
+        setToken({
+          token: foundInputToken,
+          type: "input",
+        }),
+      );
+      dispatch(
+        fetchSPLAddress({
+          solAddress: foundInputToken.address,
+          selType: "input",
+        }),
+      );
+      dispatch(
+        setToken({
+          token: foundOutputToken,
+          type: "output",
+        }),
+      );
+      dispatch(
+        fetchSPLAddress({
+          solAddress: foundOutputToken.address,
+          selType: "output",
+        }),
+      );
+    }
+  }, [dispatch, searchParams, tokenQuery.data]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set("inputCurrency", inputToken.svm);
+    params.set("outputCurrency", outputToken.svm);
+
+    router.push(`/swap?${params.toString()}`);
+  }, [inputToken, outputToken, router]);
+
+  useEffect(() => {
+    if (!isPending && !isQuoteError && quote) {
+      dispatch(setOutputTokenAmount(quote));
+    }
+  }, [dispatch, quote, isPending, isQuoteError]);
+
+  useEffect(() => {
     if (outputTokenBalance && inputToken.evm) {
       dispatch(
         setUserbalance({
           amount: Number(outputTokenBalance.value),
           type: "output",
-        })
+        }),
       );
     }
 
@@ -145,7 +140,7 @@ export default function SwapClient() {
         setUserbalance({
           amount: Number(inputTokenBalance.value),
           type: "input",
-        })
+        }),
       );
     }
   }, [
@@ -156,14 +151,6 @@ export default function SwapClient() {
     outputToken.evm,
     address,
   ]);
-
-  if (isLoading) {
-    return <div>Loading tokens...</div>;
-  }
-
-  if (isError && error) {
-    return <div>{error.message}</div>;
-  }
 
   return (
     <div className="p-5 bg-grayBg rounded-2xl max-w-xs lg:max-w-2xl mx-auto flex flex-col ">
@@ -206,7 +193,13 @@ export default function SwapClient() {
       <SwapOutput />
       <SwapBtn
         confirmSwapModal={() => setIsConfirmSwapModal(!isConfirmSwapModal)}
-        isDisabled={outputToken.weiAmount === 0 || inputToken.weiAmount > (inputToken.userBalance ?? 0) * (10**inputToken.decimals)}
+        isDisabled={
+          outputToken.weiAmount === undefined ||
+          outputToken.weiAmount === 0 ||
+          inputToken.weiAmount === undefined ||
+          inputToken.weiAmount >
+            (inputToken.userBalance ?? 0) * 10 ** inputToken.decimals
+        }
       />
       {isConfirmSwapModal && (
         <ConfirmSwap
