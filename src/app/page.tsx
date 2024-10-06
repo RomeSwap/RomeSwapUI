@@ -5,7 +5,6 @@ import {
 	clashGroteskBold,
 	clashGroteskRegular,
 	coolveticaRegular,
-	poppins,
 } from "@/app/fonts/fonts";
 
 export default function Home() {
@@ -58,7 +57,7 @@ export default function Home() {
 						<div
 							className={`${clashGroteskBold.className} text-transparent bg-clip-text bg-[linear-gradient(270deg,_#9945FF_-52.16%,_#14F195_100%)]`}
 						>
-							Rome Swap
+							RomeSwap
 						</div>
 					</div>
 					<p className={`text-paragraph w-[90%] lg:w-full`}>

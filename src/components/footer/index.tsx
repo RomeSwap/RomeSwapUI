@@ -15,7 +15,7 @@ const FooterComp = () => {
 						height={68}
 						alt="Rome Exchange Logo"
 					/>
-					<div className="font-semibold">Rome Swap</div>
+					<div className="font-semibold">RomeSwap</div>
 				</div>
 				<div className="flex flex-col lg:flex-row items-center gap-x-12 gap-y-2">
 					<div
