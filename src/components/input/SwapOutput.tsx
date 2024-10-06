@@ -27,7 +27,7 @@ export const SwapOutput = () => {
   });
 
   useEffect(() => {
-    if (outputTokenEvm && balance?.value && balance.value !== undefined) {
+    if (outputTokenEvm && balance?.value) {
       dispatch(
         setUserbalance({ amount: Number(balance.value), type: "output" }),
       );
