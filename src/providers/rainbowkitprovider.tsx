@@ -25,7 +25,7 @@ const connectors = connectorsForWallets(
       wallets: [metaMaskWallet, coinbaseWallet, walletConnectWallet, oktoWallet],
     },
   ],
-  { appName: "RainbowKit App", projectId: "YOUR_PROJECT_ID" }
+  { appName: "RainbowKit App", projectId: "a23a6c61fc0db163a7e310431e37299f" }
 );
 
 export const config = createConfig({
