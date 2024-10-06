@@ -5,6 +5,7 @@ import Navbar from "@/components/navbar";
 import BgEllipseSvgs from "@/components/BgEllipseSvgs";
 import RainBowKitCustomProvider from "@/providers/rainbowkitprovider";
 import StoreProvider from "@/providers/storeProvider";
+import FooterComp from "@/components/footer";
 
 export const metadata: Metadata = {
 	title: "Homepage | LoremSwap",
@@ -35,6 +36,7 @@ export default function RootLayout({
 					<RainBowKitCustomProvider>
 						<Navbar />
 						{children}
+						<FooterComp />
 						<BgEllipseSvgs />
 					</RainBowKitCustomProvider>
 				</StoreProvider>
