@@ -2,13 +2,37 @@
 
 import { useAppDispatch, useAppSelector } from "@/libs/hooks/redux/redux";
 import SwapInputComponent from "./SwapInputComponent";
-import { selectOutputToken, setToken } from "@/libs/features/swap/swapSlice";
+import {
+  selectOutputToken,
+  setToken,
+  setUserbalance,
+} from "@/libs/features/swap/swapSlice";
 import { defaultOutputToken } from "@/libs/defaultToken";
+import { useAccount, useBalance } from "wagmi";
+import { useEffect, useMemo } from "react";
 
 export const SwapOutput = () => {
   const dispatch = useAppDispatch();
-
+  const { address } = useAccount();
   const outputToken = useAppSelector(selectOutputToken);
+
+  const outputTokenEvm = useMemo(() => outputToken.evm, [outputToken.evm]);
+
+  const { data: balance } = useBalance({
+    address,
+    token: outputTokenEvm,
+    query: {
+      refetchInterval: 5000,
+    },
+  });
+
+  useEffect(() => {
+    if (outputTokenEvm && balance?.value && balance.value !== undefined) {
+      dispatch(
+        setUserbalance({ amount: Number(balance.value), type: "output" }),
+      );
+    }
+  }, [dispatch, balance?.value, outputTokenEvm]);
 
   const handleSelect = (selToken: Token) => {
     dispatch(setToken({ token: selToken, type: "output" }));
