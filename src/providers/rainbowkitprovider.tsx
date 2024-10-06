@@ -14,6 +14,7 @@ import {
   metaMaskWallet,
   coinbaseWallet,
   walletConnectWallet,
+  oktoWallet
 } from "@rainbow-me/rainbowkit/wallets";
 import { getClient } from "@wagmi/core";
 
@@ -21,7 +22,7 @@ const connectors = connectorsForWallets(
   [
     {
       groupName: "Suggested",
-      wallets: [metaMaskWallet, coinbaseWallet, walletConnectWallet],
+      wallets: [metaMaskWallet, coinbaseWallet, walletConnectWallet, oktoWallet],
     },
   ],
   { appName: "RainbowKit App", projectId: "YOUR_PROJECT_ID" }
