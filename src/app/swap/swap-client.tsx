@@ -6,7 +6,6 @@ import { defaultInputToken, defaultOutputToken } from "@/libs/defaultToken";
 import SlippageSettingsModal from "@/components/modals/SlippageSettingsModal";
 import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
 import { PiArrowsDownUpBold } from "react-icons/pi";
-import { useAccount, useBalance } from "wagmi";
 import { useQuote } from "@/libs/hooks/jupiter/useQuote";
 import { useAppDispatch, useAppSelector } from "@/libs/hooks/redux/redux";
 import {
@@ -33,7 +32,6 @@ export default function SwapClient() {
   const searchParams = useSearchParams();
   const inputCurrency = searchParams.get("inputCurrency");
   const outputCurrency = searchParams.get("outputCurrency");
-  const { address } = useAccount();
   const dispatch = useAppDispatch();
 
   const tokenQuery = useGetVerifiedTokensQuery();
@@ -100,18 +98,18 @@ export default function SwapClient() {
   }, [dispatch, outputCurrency, tokenQuery.data]);
 
   useEffect(() => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams);
     params.set("inputCurrency", inputToken.svm);
 
     router.push(`/swap?${params.toString()}`);
-  }, [inputToken, router]);
+  }, [inputToken, searchParams, router]);
 
   useEffect(() => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams);
     params.set("outputCurrency", outputToken.svm);
 
     router.push(`/swap?${params.toString()}`);
-  }, [outputToken, router]);
+  }, [outputToken, searchParams, router]);
 
   useEffect(() => {
     if (!isPending && !isQuoteError && quote) {
