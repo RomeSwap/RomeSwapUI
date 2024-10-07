@@ -59,7 +59,7 @@ export const fetchSPLAddress = createAsyncThunk(
       });
 
       if (data == ZeroAddress) {
-          throw "No equivalent SPL Token found"
+        throw "No equivalent SPL Token found";
       }
 
       return { data, selType };
@@ -105,8 +105,8 @@ export const swapSlice = createSlice({
         ...ptoken,
       };
       state.quote = undefined;
-      state.outputToken.humanAmount = undefined
-      state.outputToken.weiAmount = undefined
+      state.outputToken.humanAmount = undefined;
+      state.outputToken.weiAmount = undefined;
 
       switch (action.payload.type) {
         case "input":
@@ -130,10 +130,6 @@ export const swapSlice = createSlice({
       state,
       action: PayloadAction<{ amount: number; type: "input" | "output" }>
     ) => {
-      console.log(
-        `userBal: ${action.payload.amount} decimals: ${state.inputToken.decimals}`
-      );
-
       switch (action.payload.type) {
         case "input":
           state.inputToken.userBalance = Number(
@@ -147,8 +143,9 @@ export const swapSlice = createSlice({
           return;
       }
     },
-    setInputTokenAmount: (state, action: PayloadAction<number|undefined>) => {
-      const wei = action.payload && action.payload * 10 ** state.inputToken.decimals;
+    setInputTokenAmount: (state, action: PayloadAction<number | undefined>) => {
+      const wei =
+        action.payload && action.payload * 10 ** state.inputToken.decimals;
 
       state.inputToken.humanAmount = action.payload;
       state.inputToken.weiAmount = wei;

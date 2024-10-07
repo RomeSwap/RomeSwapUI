@@ -29,11 +29,11 @@ const TokenSelectorModal = ({
     (token: Token) => {
       dispatch(setToken({ token: token, type: setType }));
       dispatch(
-        fetchSPLAddress({ solAddress: token.address, selType: setType }),
+        fetchSPLAddress({ solAddress: token.address, selType: setType })
       );
       onClose();
     },
-    [dispatch, setType, onClose],
+    [dispatch, setType, onClose]
   );
 
   const filteredTokens = useMemo(() => {
@@ -42,7 +42,7 @@ const TokenSelectorModal = ({
       (token) =>
         token.name.toLowerCase().includes(lowerSearch) ||
         token.symbol.toLowerCase().includes(lowerSearch) ||
-        token.address.toLowerCase().includes(lowerSearch),
+        token.address.toLowerCase().includes(lowerSearch)
     );
   }, [allTokens, search]);
 

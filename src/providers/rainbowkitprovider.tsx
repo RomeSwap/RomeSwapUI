@@ -17,7 +17,7 @@ import {
   oktoWallet,
   phantomWallet,
   braveWallet,
-  trustWallet
+  trustWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { getClient } from "@wagmi/core";
 
@@ -25,7 +25,15 @@ const connectors = connectorsForWallets(
   [
     {
       groupName: "Suggested",
-      wallets: [metaMaskWallet, phantomWallet, trustWallet, coinbaseWallet, walletConnectWallet, oktoWallet, braveWallet],
+      wallets: [
+        metaMaskWallet,
+        phantomWallet,
+        trustWallet,
+        coinbaseWallet,
+        walletConnectWallet,
+        oktoWallet,
+        braveWallet,
+      ],
     },
   ],
   { appName: "RainbowKit App", projectId: "a23a6c61fc0db163a7e310431e37299f" }

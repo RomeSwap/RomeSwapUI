@@ -20,7 +20,6 @@ const getClass = (status: "error" | "idle" | "pending" | "success") => {
 };
 
 const TransactionToast: React.FC<ToastProps> = ({ status, tx }) => {
-  console.log("asdf");
   return (
     <div
       className={

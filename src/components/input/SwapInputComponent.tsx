@@ -6,10 +6,7 @@ import { FaAngleDown } from "react-icons/fa6";
 import { useState } from "react";
 import clsx from "clsx";
 import { useAppDispatch } from "@/libs/hooks/redux/redux";
-import {
-  setInputTokenAmount,
-  SwapToken,
-} from "@/libs/features/swap/swapSlice";
+import { setInputTokenAmount, SwapToken } from "@/libs/features/swap/swapSlice";
 import { useGetTokenPriceQuery } from "@/libs/features/jupiter/priceSlice";
 import { nexa } from "@/app/fonts/fonts";
 import UserBalance from "../info/UserBalance";
@@ -78,12 +75,12 @@ const SwapInputComponent = ({
               <FaAngleDown />
             </div>
           </button>
-            <UserBalance tokenEvmAddress={token.evm} setType={setType} />
+          <UserBalance tokenEvmAddress={token.evm} setType={setType} />
         </div>
         <div
           className={clsx(
             "flex items-center justify-between font-thin",
-            nexa.className,
+            nexa.className
           )}
         >
           <input

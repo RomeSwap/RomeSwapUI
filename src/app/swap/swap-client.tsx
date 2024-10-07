@@ -65,13 +65,13 @@ export default function SwapClient() {
         setToken({
           token: foundInputToken,
           type: "input",
-        }),
+        })
       );
       dispatch(
         fetchSPLAddress({
           solAddress: foundInputToken.address,
           selType: "input",
-        }),
+        })
       );
     }
   }, [dispatch, inputCurrency, tokenQuery.data]);
@@ -85,13 +85,13 @@ export default function SwapClient() {
         setToken({
           token: foundOutputToken,
           type: "output",
-        }),
+        })
       );
       dispatch(
         fetchSPLAddress({
           solAddress: foundOutputToken.address,
           selType: "output",
-        }),
+        })
       );
     }
   }, [dispatch, outputCurrency, tokenQuery.data]);

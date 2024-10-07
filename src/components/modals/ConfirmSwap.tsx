@@ -193,7 +193,14 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
   }, [outputToken.evm, outputToken.svm, writeContract]);
 
   const proceedToSwap = useCallback(async () => {
-    if (!quote || !inputToken.evm || !outputToken.evm || !address || !inputToken.weiAmount) return;
+    if (
+      !quote ||
+      !inputToken.evm ||
+      !outputToken.evm ||
+      !address ||
+      !inputToken.weiAmount
+    )
+      return;
 
     setSwapStep("swapping");
     console.log("Executing swap");
@@ -258,7 +265,10 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
     handleSwap();
   }, [handleSwap]);
 
-  const minimumReceived = ((outputToken.humanAmount ?? 0) * (1 - (quote?.slippageBps ?? 0) / 10000)).toPrecision(4)
+  const minimumReceived = (
+    (outputToken.humanAmount ?? 0) *
+    (1 - (quote?.slippageBps ?? 0) / 10000)
+  ).toPrecision(4);
 
   return (
     <div>

@@ -33,9 +33,9 @@ interface TokenSelectorModalProps {
 }
 
 interface PriceData {
-	id: string;
-	mintSymbol: string;
-	vsToken: string;
-	vsTokenSymbol: string;
-	price: number;
+  id: string;
+  mintSymbol: string;
+  vsToken: string;
+  vsTokenSymbol: string;
+  price: number;
 }

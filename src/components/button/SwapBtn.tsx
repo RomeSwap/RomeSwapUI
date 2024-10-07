@@ -31,7 +31,7 @@ const SwapBtn = ({
     <button
       className={clsx(
         "w-full text-center font-semibold text-dark py-2 lg:py-3 rounded-lg",
-        isDisabled ? " cursor-not-allowed bg-lightGray" : "bg-primary ",
+        isDisabled ? " cursor-not-allowed bg-lightGray" : "bg-primary "
       )}
       disabled={isDisabled}
       type="button"

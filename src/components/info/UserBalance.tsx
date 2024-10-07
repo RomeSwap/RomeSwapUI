@@ -24,13 +24,12 @@ const UserBalance = ({
   });
 
   useEffect(() => {
-    if (data?.value && tokenEvmAddress) {
-      console.log("wtf: ", data.value);
+    if (data?.value) {
       dispatch(
         setUserbalance({
-          amount: Number(data.value),
+          amount: tokenEvmAddress ? Number(data.value) : 0,
           type: setType,
-        }),
+        })
       );
     }
   }, [dispatch, setType, data?.value, tokenEvmAddress]);
@@ -43,8 +42,8 @@ const UserBalance = ({
           ? isLoading
             ? "..."
             : isSuccess && data?.value
-              ? (Number(data.value) / 10 ** data.decimals).toFixed(4)
-              : "0"
+            ? (Number(data.value) / 10 ** data.decimals).toPrecision(4)
+            : "0"
           : "0"}{" "}
         MAX
       </button>
