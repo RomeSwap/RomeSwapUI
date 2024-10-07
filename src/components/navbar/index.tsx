@@ -12,6 +12,7 @@ import clsx from "clsx";
 
 import { clashGroteskBold } from "@/app/fonts/fonts";
 import { GoXCircleFill } from "react-icons/go";
+import Mercuryo from "../mercuryo";
 
 export default function Navbar() {
   const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
@@ -112,6 +113,7 @@ export default function Navbar() {
             );
           })}
         </div>
+        <Mercuryo />
         <div className="hidden lg:block">
           <CustomConnectWalletBtn />
         </div>
