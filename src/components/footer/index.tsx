@@ -23,7 +23,7 @@ const FooterComp = () => {
 					>
 						Join our socials to get more updates!
 					</div>
-					<div className="flex items-center gap-x-3 lg:flex-wrap lg:w-[96px] lg:gap-4">
+					<div className="flex items-center gap-x-3">
 						{socialLinks.map((link, idx) => {
 							return (
 								<Link
