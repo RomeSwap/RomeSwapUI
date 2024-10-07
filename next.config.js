@@ -20,6 +20,11 @@ const nextConfig = {
         destination: 'https://t.me/+bt04jB2Ckv5jNThi',
         permanent: false,
       },
+      {
+        source: '/github',
+        destination: 'https://github.com/RomeSwap',
+        permanent: false,
+      },
     ]
   },
 };
