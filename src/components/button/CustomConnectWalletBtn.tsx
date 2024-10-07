@@ -5,6 +5,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import React from "react";
 import { FaAngleDown, FaWallet } from "react-icons/fa6";
+import { IoWarning } from "react-icons/io5";
 import { PiWallet } from "react-icons/pi";
 
 type CustomConnectWalletBtnProps = {
@@ -29,7 +30,7 @@ const CustomConnectWalletBtn: React.FC<CustomConnectWalletBtnProps> = ({
 			return (
 				<div
 					className={clsx(
-						"flex items-center h-full text-primary",
+						"flex items-center h-full text-grayText  rounded-lg ",
 						className,
 					)}
 					onClick={openConnectModal}
@@ -43,7 +44,10 @@ const CustomConnectWalletBtn: React.FC<CustomConnectWalletBtnProps> = ({
 						if (!connected) {
 							return (
 								<button
-									className="w-full flex items-center justify-center gap-x-2 xl:gap-x-4 bg-primary text-black text-sm font-semibold py-2 px-4 lg:px-6 rounded-lg transition-all duration-300 ease-in-out border border-transparent hover:border-primary"
+									className={clsx(
+										"w-full flex items-center justify-center gap-x-2 xl:gap-x-4 bg-orangeGradient rounded-lg overflow-hidden text-background text-sm font-semibold py-2 px-4 lg:px-6 transition-all duration-300 ease-in-out hover:scale-105",
+										className,
+									)}
 									onClick={openConnectModal}
 									type="button"
 								>
@@ -58,8 +62,15 @@ const CustomConnectWalletBtn: React.FC<CustomConnectWalletBtnProps> = ({
 						// Wrong network
 						if (chain.unsupported) {
 							return (
-								<button onClick={openChainModal} type="button">
-									Wrong network
+								<button
+									className="flex items-center gap-x-2 text-orange-500"
+									onClick={openChainModal}
+									type="button"
+								>
+									<span className="text-2xl">
+										<IoWarning />
+									</span>
+									<span>Wrong network</span>
 								</button>
 							);
 						}
@@ -68,11 +79,12 @@ const CustomConnectWalletBtn: React.FC<CustomConnectWalletBtnProps> = ({
 						return (
 							<div className={`h-11 flex items-center gap-x-2`}>
 								<button
-									className="w-full h-full flex items-center gap-x-2 bg-grayBg px-2 lg:px-4 py-1 lg:py-2 rounded-lg border border-light/10 transition-all duration-300 ease-in-out hover:bg-primary/20 hover:border-primary"
+									className="w-full h-full flex items-center gap-x-2 bg-transparent backdrop-blur-lg px-2 lg:px-4 py-1 lg:py-2 rounded-lg border border-light/10 transition-all duration-300 ease-in-out hover:text-light hover:bg-background/60"
 									onClick={openChainModal}
 									type="button"
 								>
-									{chain.hasIcon && (
+									{/* As we only use neon chain */}
+									{/* {chain.hasIcon && (
 										<div
 											className={`overflow-hidden rounded-full`}
 											style={{
@@ -92,8 +104,18 @@ const CustomConnectWalletBtn: React.FC<CustomConnectWalletBtnProps> = ({
 												/>
 											)}
 										</div>
-									)}
-									<div className="hidden lg:block w-16 truncate text-ellipsis">
+									)} */}
+									<div
+										className={` flex items-center w-6 h-6 rounded-full`}
+									>
+										<Image
+											width={24}
+											height={24}
+											alt={chain.name ?? "Chain icon"}
+											src="/solana-sol-logo.svg"
+										/>
+									</div>
+									<div className="hidden lg:block w-16 truncate text-ellipsis text-xs">
 										{chain.name}
 									</div>
 									<div className="hidden lg:block text-lg">
@@ -101,15 +123,15 @@ const CustomConnectWalletBtn: React.FC<CustomConnectWalletBtnProps> = ({
 									</div>
 								</button>
 								<button
-									className="w-full h-full flex items-center gap-x-2 bg-grayBg px-2 lg:px-4 py-1 lg:py-2 rounded-lg border border-light/10 transition-all duration-300 ease-in-out hover:bg-primary/20 hover:border-primary"
+									className="w-full h-full flex items-center gap-x-2 bg-transparent backdrop-blur-lg px-2 lg:px-4 py-1 lg:py-2 rounded-lg border border-light/10 transition-all duration-300 ease-in-out hover:text-light hover:bg-background/60"
 									onClick={openAccountModal}
 									type="button"
 								>
 									<div className="text-2xl">
 										<FaWallet />
 									</div>
-									<div className="hidden lg:flex items-center gap-x-1">
-										<div className="">
+									<div className="flex items-center gap-x-1">
+										<div className="text-xs">
 											{account.displayName}
 										</div>
 										<div className="text-lg">
