@@ -23,9 +23,9 @@ export const jupiterTokenApi = createApi({
   endpoints: (builder) => ({
     getVerifiedTokens: builder.query<Token[], void>({
       query: () => "tokens?tags=verified",
-      transformResponse: (result: { [address: string]: JupiterToken } ) => {
+      transformResponse: (result: { [address: string]: JupiterToken }) => {
         return Object.values(result).map(
-          (token: JupiterToken): Token => parseToken(token),
+          (token: JupiterToken): Token => parseToken(token)
         );
       },
     }),
@@ -38,4 +38,5 @@ export const jupiterTokenApi = createApi({
   }),
 });
 
-export const { useGetVerifiedTokensQuery, useGetTokenByAddressQuery } = jupiterTokenApi;
+export const { useGetVerifiedTokensQuery, useGetTokenByAddressQuery } =
+  jupiterTokenApi;
