@@ -6,7 +6,8 @@ import { FaAngleDown } from "react-icons/fa6";
 import { useState } from "react";
 import clsx from "clsx";
 import { useAppDispatch } from "@/libs/hooks/redux/redux";
-import { setInputTokenAmount } from "@/libs/features/swap/swapSlice";
+import { setInputTokenAmount, SwapToken } from "@/libs/features/swap/swapSlice";
+import { useGetTokenPriceQuery } from "@/libs/features/jupiter/priceSlice";
 
 interface SwapInputComponentProps {
   setType: "input" | "output";
@@ -39,6 +40,10 @@ const SwapInputComponent = ({
 
   const toggleSelector = () => setIsSelectorOpen(!isSelectorOpen);
 
+  const {data: tokenUsdPrice} = useGetTokenPriceQuery(token.address)
+  const userBalanceUsd = (balance ?? 0) * (tokenUsdPrice?.data[token.address]?.price ?? 0)
+  console.log(tokenUsdPrice)
+
   const handleAmountChange = (e: any) => {
     if (setType == "input") {
       dispatch(setInputTokenAmount(Number(e.target.value)));
@@ -63,7 +68,6 @@ const SwapInputComponent = ({
                       ? DEFAULT_LOGO_URI
                       : token.logoURI
                   }
-                  // src={token.logoURI}
                   width={21}
                   height={21}
                   alt={`${token.symbol} logo`}
@@ -92,7 +96,7 @@ const SwapInputComponent = ({
             aria-label={`Enter amount of ${token.symbol}`}
             readOnly={readOnly ?? false}
           />
-          <div className="text-grayText text-xs text-end ">~XXUSD</div>
+          <div className="text-grayText text-xs text-end ">~{userBalanceUsd.toPrecision(3)} USD</div>
         </div>
       </div>
       {isSelectorOpen && (
