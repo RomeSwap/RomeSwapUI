@@ -124,19 +124,19 @@ export default function SwapClient() {
 			<div className="w-full flex items-center justify-end gap-x-2 mb-4">
 				<button
 					type="button"
-					className="flex items-center justify-center w-[32px] h-[32px] bg-primary text-grayBg rounded-full"
+					className="flex items-center justify-center text-primary"
 				>
-					<span className="text-xl">
+					<span className="text-lg lg:text-xl">
 						<FaArrowRotateLeft />
 					</span>
 				</button>
 				<button
 					type="button"
-					className=" text-4xl text-light"
+					className=" text-light"
 					aria-label="Open slippage settings"
 					onClick={() => setIsSlippage(true)}
 				>
-					<span className="text-[32px]">
+					<span className="text-lg lg:text-xl">
 						<FaGear />
 					</span>
 				</button>
