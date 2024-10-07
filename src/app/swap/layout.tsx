@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Swap | LoremSwap",
+	title: "Swap | RomeSwap",
 };
 
 export default function SwapLayout({
