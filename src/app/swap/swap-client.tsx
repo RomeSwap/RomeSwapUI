@@ -65,13 +65,13 @@ export default function SwapClient() {
         setToken({
           token: foundInputToken,
           type: "input",
-        })
+        }),
       );
       dispatch(
         fetchSPLAddress({
           solAddress: foundInputToken.address,
           selType: "input",
-        })
+        }),
       );
     }
   }, [dispatch, inputCurrency, tokenQuery.data]);
@@ -85,13 +85,13 @@ export default function SwapClient() {
         setToken({
           token: foundOutputToken,
           type: "output",
-        })
+        }),
       );
       dispatch(
         fetchSPLAddress({
           solAddress: foundOutputToken.address,
           selType: "output",
-        })
+        }),
       );
     }
   }, [dispatch, outputCurrency, tokenQuery.data]);
@@ -117,23 +117,23 @@ export default function SwapClient() {
   }, [dispatch, quote, isPending, isQuoteError]);
 
   return (
-    <section className="p-5 bg-grayBg rounded-2xl max-w-xs lg:max-w-2xl mx-auto flex flex-col justify-center h-full">
+    <section className="h-auto p-5 bg-grayBg rounded-2xl min-w-xs lg:w-[576px] mx-auto flex flex-col justify-center">
       <div className="w-full flex items-center justify-end gap-x-2 mb-4">
         <button
           type="button"
-          className="flex items-center justify-center w-[32px] h-[32px] bg-primary text-grayBg rounded-full"
+          className="flex items-center justify-center text-primary"
         >
-          <span className="text-xl">
+          <span className="text-lg lg:text-xl">
             <FaArrowRotateLeft />
           </span>
         </button>
         <button
           type="button"
-          className=" text-4xl text-light"
+          className=" text-light"
           aria-label="Open slippage settings"
           onClick={() => setIsSlippage(true)}
         >
-          <span className="text-[32px]">
+          <span className="text-lg lg:text-xl">
             <FaGear />
           </span>
         </button>

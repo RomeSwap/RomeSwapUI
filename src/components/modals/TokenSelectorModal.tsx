@@ -29,11 +29,14 @@ const TokenSelectorModal = ({
     (token: Token) => {
       dispatch(setToken({ token: token, type: setType }));
       dispatch(
-        fetchSPLAddress({ solAddress: token.address, selType: setType })
+        fetchSPLAddress({
+          solAddress: token.address,
+          selType: setType,
+        }),
       );
       onClose();
     },
-    [dispatch, setType, onClose]
+    [dispatch, setType, onClose],
   );
 
   const filteredTokens = useMemo(() => {
@@ -42,7 +45,7 @@ const TokenSelectorModal = ({
       (token) =>
         token.name.toLowerCase().includes(lowerSearch) ||
         token.symbol.toLowerCase().includes(lowerSearch) ||
-        token.address.toLowerCase().includes(lowerSearch)
+        token.address.toLowerCase().includes(lowerSearch),
     );
   }, [allTokens, search]);
 
@@ -52,7 +55,7 @@ const TokenSelectorModal = ({
         className="w-full h-full bg-transparent backdrop-blur-lg"
         onClick={onClose}
       ></div>
-      <div className="absolute bg-grayBg rounded-lg w-[90%] lg:w-[641px]">
+      <div className="absolute bg-grayBg rounded-lg w-[90%] lg:w-[576px]">
         <div className="flex items-center justify-between gap-x-5 p-4">
           <div className="flex items-center gap-x-4">
             <label htmlFor="token-search" className="sr-only">
@@ -93,7 +96,7 @@ const TokenSelectorModal = ({
                   <div className="ml-2 w-11 h-11">
                     {token.logoURI && (
                       <Image
-                        className="w-full h-full"
+                        className="w-full h-full rounded-full"
                         src={token.logoURI}
                         width={46}
                         height={46}

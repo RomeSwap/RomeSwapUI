@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Swap | LoremSwap",
+  title: "Swap | RomeSwap",
 };
 
 export default function SwapLayout({
@@ -9,5 +9,5 @@ export default function SwapLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <main>{children}</main>;
+  return <main className="h-screen overflow-y-hidden">{children}</main>;
 }

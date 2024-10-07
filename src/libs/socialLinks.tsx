@@ -1,25 +1,16 @@
-import {
-  FaDiscord,
-  FaGithub,
-  FaRedditAlien,
-  FaXTwitter,
-} from "react-icons/fa6";
+import { FaGithub, FaTelegram, FaXTwitter } from "react-icons/fa6";
 
 export const socialLinks = [
   {
-    icon: <FaGithub />,
-    link: "https://github.com/",
-  },
-  {
     icon: <FaXTwitter />,
-    link: "https://x.com/",
+    link: "https://romeswap.com/twitter",
   },
   {
-    icon: <FaRedditAlien />,
-    link: "https://reddit.com/",
+    icon: <FaTelegram />,
+    link: "https://romeswap.com/telegram",
   },
   {
-    icon: <FaDiscord />,
-    link: "https://discord.com/",
+    icon: <FaGithub />,
+    link: "https://romeswap.com/github",
   },
 ];
