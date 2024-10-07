@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 export default function SwapPage() {
 	return (
 		<Suspense>
-			<div className="min-h-screen w-full flex flex-col items-center justify-center">
+			<div className="h-[calc(100vh-4rem)] w-full flex flex-col items-center justify-center">
 				<div className="absolute z-20">
 					<SwapClient />
 				</div>

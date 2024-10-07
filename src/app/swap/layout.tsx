@@ -9,5 +9,5 @@ export default function SwapLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return <main>{children}</main>;
+	return <main className="h-screen overflow-y-hidden">{children}</main>;
 }
