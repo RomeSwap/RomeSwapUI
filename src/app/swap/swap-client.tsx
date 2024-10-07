@@ -23,7 +23,6 @@ import SwapOutput from "@/components/input/SwapOutput";
 import SwapBtn from "@/components/button/SwapBtn";
 import ConfirmSwap from "@/components/modals/ConfirmSwap";
 import { useGetVerifiedTokensQuery } from "@/libs/features/jupiter/tokenSlice";
-import Image from "next/image";
 
 export default function SwapClient() {
 	const [isSlippage, setIsSlippage] = useState(false);
