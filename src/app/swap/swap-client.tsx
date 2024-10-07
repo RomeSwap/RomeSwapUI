@@ -120,7 +120,7 @@ export default function SwapClient() {
 	}, [dispatch, quote, isPending, isQuoteError]);
 
 	return (
-		<section className="p-5 bg-grayBg rounded-2xl min-w-xs lg:w-[576px] border mx-auto flex flex-col justify-center h-full">
+		<section className="p-5 bg-grayBg rounded-2xl min-w-xs lg:w-[576px] mx-auto flex flex-col justify-center h-full">
 			<div className="w-full flex items-center justify-end gap-x-2 mb-4">
 				<button
 					type="button"
