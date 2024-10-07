@@ -30,7 +30,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${poppins.variable} bg-background text-light antialiased`}
+				className={`${poppins.variable} bg-background  text-light antialiased`}
 			>
 				<StoreProvider>
 					<RainBowKitCustomProvider>

@@ -6,7 +6,6 @@ import { defaultInputToken, defaultOutputToken } from "@/libs/defaultToken";
 import SlippageSettingsModal from "@/components/modals/SlippageSettingsModal";
 import { FaArrowRotateLeft, FaGear } from "react-icons/fa6";
 import { PiArrowsDownUpBold } from "react-icons/pi";
-import { useAccount, useBalance } from "wagmi";
 import { useQuote } from "@/libs/hooks/jupiter/useQuote";
 import { useAppDispatch, useAppSelector } from "@/libs/hooks/redux/redux";
 import {
@@ -19,11 +18,10 @@ import {
   setTokenList,
   swapInputOutput,
 } from "@/libs/features/swap/swapSlice";
-import SwapInput from "@/components/input/SwapInput";
-import SwapOutput from "@/components/input/SwapOutput";
 import SwapBtn from "@/components/button/SwapBtn";
 import ConfirmSwap from "@/components/modals/ConfirmSwap";
 import { useGetVerifiedTokensQuery } from "@/libs/features/jupiter/tokenSlice";
+import SwapInputComponent from "@/components/input/SwapInputComponent";
 
 export default function SwapClient() {
   const [isSlippage, setIsSlippage] = useState(false);
@@ -33,7 +31,6 @@ export default function SwapClient() {
   const searchParams = useSearchParams();
   const inputCurrency = searchParams.get("inputCurrency");
   const outputCurrency = searchParams.get("outputCurrency");
-  const { address } = useAccount();
   const dispatch = useAppDispatch();
 
   const tokenQuery = useGetVerifiedTokensQuery();
@@ -100,18 +97,18 @@ export default function SwapClient() {
   }, [dispatch, outputCurrency, tokenQuery.data]);
 
   useEffect(() => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams);
     params.set("inputCurrency", inputToken.svm);
 
     router.push(`/swap?${params.toString()}`);
-  }, [inputToken, router]);
+  }, [inputToken, searchParams, router]);
 
   useEffect(() => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams);
     params.set("outputCurrency", outputToken.svm);
 
     router.push(`/swap?${params.toString()}`);
-  }, [outputToken, router]);
+  }, [outputToken, searchParams, router]);
 
   useEffect(() => {
     if (!isPending && !isQuoteError && quote) {
@@ -120,7 +117,7 @@ export default function SwapClient() {
   }, [dispatch, quote, isPending, isQuoteError]);
 
   return (
-    <div className="p-5 bg-grayBg rounded-2xl max-w-xs lg:max-w-2xl mx-auto flex flex-col ">
+    <section className="p-5 bg-grayBg rounded-2xl max-w-xs lg:max-w-2xl mx-auto flex flex-col justify-center h-full">
       <div className="w-full flex items-center justify-end gap-x-2 mb-4">
         <button
           type="button"
@@ -144,11 +141,17 @@ export default function SwapClient() {
           <SlippageSettingsModal onClose={() => setIsSlippage(false)} />
         )}
       </div>
-      <SwapInput />
+      <SwapInputComponent
+        customBg="bg-dark"
+        setType="input"
+        token={inputToken}
+        defaultToken={defaultInputToken}
+        readOnly={false}
+      />
       {/* Swap tokens button */}
-      <div className="flex justify-end lg:justify-center items-center h-1.5 w-full relative">
+      <div className="flex justify-end lg:justify-center items-center h-1.5 lg:h-2 w-full relative">
         <button
-          className="absolute -top-6 right-1.5 lg:right-auto flex items-center justify-center w-[51px] h-[51px] rounded-full border-4 border-grayBg bg-secondary text-light text-2xl"
+          className="absolute -top-6 right-1.5 lg:right-auto flex items-center justify-center w-[51px] h-[51px] rounded-full border-4 border-grayBg bg-[#FF9900] text-light text-2xl"
           onClick={() => dispatch(swapInputOutput())}
           type="button"
           aria-label="Swap tokens"
@@ -157,7 +160,13 @@ export default function SwapClient() {
         </button>
       </div>
       {/* Output */}
-      <SwapOutput />
+      <SwapInputComponent
+        customBg="bg-dark"
+        setType="output"
+        token={outputToken}
+        defaultToken={defaultOutputToken}
+        readOnly={true}
+      />
       <SwapBtn
         confirmSwapModal={() => setIsConfirmSwapModal(!isConfirmSwapModal)}
         isDisabled={
@@ -174,6 +183,6 @@ export default function SwapClient() {
           price={0}
         />
       )}
-    </div>
+    </section>
   );
 }

@@ -7,6 +7,7 @@ import { Address } from "viem";
 import { readContract } from "@wagmi/core";
 import { publicKeyToBytes32 } from "@/libs/hooks/neon/utils";
 import { config } from "@/providers/rainbowkitprovider";
+import { ZeroAddress } from "ethers";
 
 export interface SwapToken extends Token {
   humanAmount?: number;
@@ -56,6 +57,10 @@ export const fetchSPLAddress = createAsyncThunk(
         abi: ERC20ForSplFactoryAbi,
         args: [publicKeyToBytes32(solAddress)],
       });
+
+      if (data == ZeroAddress) {
+          throw "No equivalent SPL Token found"
+      }
 
       return { data, selType };
     } catch (error) {

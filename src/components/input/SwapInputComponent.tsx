@@ -6,19 +6,20 @@ import { FaAngleDown } from "react-icons/fa6";
 import { useState } from "react";
 import clsx from "clsx";
 import { useAppDispatch } from "@/libs/hooks/redux/redux";
-import { setInputTokenAmount, SwapToken } from "@/libs/features/swap/swapSlice";
+import {
+  setInputTokenAmount,
+  SwapToken,
+} from "@/libs/features/swap/swapSlice";
 import { useGetTokenPriceQuery } from "@/libs/features/jupiter/priceSlice";
+import { nexa } from "@/app/fonts/fonts";
+import UserBalance from "../info/UserBalance";
 
 interface SwapInputComponentProps {
   setType: "input" | "output";
-  token: Token;
-  amount?: number;
+  token: SwapToken;
   defaultToken?: Token;
-  isLoading: boolean;
-  onSelect: (token: Token) => void;
   customBg: string;
   readOnly?: boolean;
-  balance?: number;
 }
 
 const DEFAULT_LOGO_URI =
@@ -26,12 +27,9 @@ const DEFAULT_LOGO_URI =
 
 const SwapInputComponent = ({
   token,
-  amount,
-  isLoading,
   defaultToken,
   customBg,
   readOnly,
-  balance,
   setType,
 }: SwapInputComponentProps) => {
   const [imageError, setImageError] = useState(false);
@@ -40,9 +38,9 @@ const SwapInputComponent = ({
 
   const toggleSelector = () => setIsSelectorOpen(!isSelectorOpen);
 
-  const {data: tokenUsdPrice} = useGetTokenPriceQuery(token.address)
-  const userBalanceUsd = (balance ?? 0) * (tokenUsdPrice?.data[token.address]?.price ?? 0)
-  console.log(tokenUsdPrice)
+  const { data: tokenUsdPrice } = useGetTokenPriceQuery(token.address, {
+    pollingInterval: 5000,
+  });
 
   const handleAmountChange = (e: any) => {
     if (setType == "input") {
@@ -80,23 +78,34 @@ const SwapInputComponent = ({
               <FaAngleDown />
             </div>
           </button>
-          <div className="text-xs text-grayText">
-            <div className="">Balance</div>
-            <div className="">{balance ?? "loading..."}</div>
-            <button type="button">MAX</button>
-          </div>
+            <UserBalance tokenEvmAddress={token.evm} setType={setType} />
         </div>
-        <div className="flex items-center justify-between">
+        <div
+          className={clsx(
+            "flex items-center justify-between font-thin",
+            nexa.className,
+          )}
+        >
           <input
             type="text"
             className="p-2 w-full bg-transparent text-2xl placeholder:text-light/30 outline-none appearance-none"
             placeholder="0.00"
-            defaultValue={amount}
+            defaultValue={token.humanAmount}
             onChange={handleAmountChange}
             aria-label={`Enter amount of ${token.symbol}`}
             readOnly={readOnly ?? false}
           />
-          <div className="text-grayText text-xs text-end ">~{userBalanceUsd.toPrecision(3)} USD</div>
+          <div
+            hidden={!token.humanAmount || !tokenUsdPrice}
+            className="text-grayText text-xs text-end "
+          >
+            ~
+            {(
+              Number(token.humanAmount ?? 0) *
+              (tokenUsdPrice?.data[token.address]?.price ?? 0)
+            ).toPrecision(3)}{" "}
+            USD
+          </div>
         </div>
       </div>
       {isSelectorOpen && (
@@ -104,7 +113,7 @@ const SwapInputComponent = ({
           setType={setType}
           defaultToken={defaultToken}
           onClose={toggleSelector}
-          isLoading={isLoading}
+          isLoading={false}
         />
       )}
     </div>
