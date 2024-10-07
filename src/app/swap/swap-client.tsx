@@ -23,7 +23,6 @@ import SwapOutput from "@/components/input/SwapOutput";
 import SwapBtn from "@/components/button/SwapBtn";
 import ConfirmSwap from "@/components/modals/ConfirmSwap";
 import { useGetVerifiedTokensQuery } from "@/libs/features/jupiter/tokenSlice";
-import Image from "next/image";
 
 export default function SwapClient() {
 	const [isSlippage, setIsSlippage] = useState(false);
@@ -120,23 +119,23 @@ export default function SwapClient() {
 	}, [dispatch, quote, isPending, isQuoteError]);
 
 	return (
-		<section className="p-5 bg-grayBg rounded-2xl max-w-xs lg:max-w-2xl mx-auto flex flex-col justify-center h-full">
+		<section className="p-5 bg-grayBg rounded-2xl min-w-xs lg:w-[576px] mx-auto flex flex-col justify-center h-full">
 			<div className="w-full flex items-center justify-end gap-x-2 mb-4">
 				<button
 					type="button"
-					className="flex items-center justify-center w-[32px] h-[32px] bg-primary text-grayBg rounded-full"
+					className="flex items-center justify-center text-primary"
 				>
-					<span className="text-xl">
+					<span className="text-lg lg:text-xl">
 						<FaArrowRotateLeft />
 					</span>
 				</button>
 				<button
 					type="button"
-					className=" text-4xl text-light"
+					className=" text-light"
 					aria-label="Open slippage settings"
 					onClick={() => setIsSlippage(true)}
 				>
-					<span className="text-[32px]">
+					<span className="text-lg lg:text-xl">
 						<FaGear />
 					</span>
 				</button>
