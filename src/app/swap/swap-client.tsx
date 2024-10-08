@@ -125,7 +125,7 @@ export default function SwapClient() {
   // };
 
   return (
-    <section className="h-auto p-5 bg-grayBg rounded-2xl min-w-xs lg:w-[576px] mx-auto flex flex-col justify-center">
+    <section className="h-auto p-5 bg-grayBg rounded-2xl w-[calc(100vw-16px)] md:w-[80%] lg:w-[576px] flex flex-col justify-center">
       <div className="w-full flex items-center justify-end gap-x-2 mb-4">
         <button
           type="button"
