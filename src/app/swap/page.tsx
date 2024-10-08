@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense } from "react";
-import Image from "next/image";
 import SwapClient from "./swap-client";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
