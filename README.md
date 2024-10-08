@@ -91,5 +91,5 @@ sequenceDiagram
 ### 🎯 Benefits
 
 - 🤝 Trustless and Decentralized: Eliminates the need for intermediaries or centralized exchanges.
-- 🌐 Seamless User Experience: Users can perform swaps without realizing they are interacting with a different blockchain.
+- 🌐 Seamless User Experience: Users can perform swaps without realizing they are actually being executed on Solana.
 - 🔑 Expanded Access: EVM wallet users can access Solana's ecosystem without additional setup.
