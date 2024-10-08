@@ -22,6 +22,8 @@ import SwapBtn from "@/components/button/SwapBtn";
 import ConfirmSwap from "@/components/modals/ConfirmSwap";
 import { useGetVerifiedTokensQuery } from "@/libs/features/jupiter/tokenSlice";
 import SwapInputComponent from "@/components/input/SwapInputComponent";
+// import TransactionToast from "@/components/toasts/TransactionToast";
+// import { toast } from "react-toastify";
 
 export default function SwapClient() {
   const [isSlippage, setIsSlippage] = useState(false);
@@ -116,12 +118,19 @@ export default function SwapClient() {
     }
   }, [dispatch, quote, isPending, isQuoteError]);
 
+  // const toastTest = () => {
+  //   toast.success(<TransactionToast status="success" tx={"0x00000"} />);
+  //   toast.info(<TransactionToast status="pending" tx={"0x00000"} />);
+  //   toast.error(<TransactionToast status="error" tx={"0x00000"} />);
+  // };
+
   return (
     <section className="h-auto p-5 bg-grayBg rounded-2xl min-w-xs lg:w-[576px] mx-auto flex flex-col justify-center">
       <div className="w-full flex items-center justify-end gap-x-2 mb-4">
         <button
           type="button"
           className="flex items-center justify-center text-primary"
+          // onClick={toastTest} // btw, this btn still has nothing to do
         >
           <span className="text-lg lg:text-xl">
             <FaArrowRotateLeft />
