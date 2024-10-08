@@ -39,3 +39,8 @@ interface PriceData {
   vsTokenSymbol: string;
   price: number;
 }
+
+interface ToastProps {
+  status: "error" | "idle" | "pending" | "success";
+  tx: string;
+}

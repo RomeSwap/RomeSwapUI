@@ -26,7 +26,7 @@ import { publicKeyToBytes32 } from "@/libs/hooks/neon/utils";
 import { ERC20ForSplFactoryAbi } from "@/libs/hooks/neon/abis/ERC20ForSplFactory";
 import { fetchSwapInstruction } from "@/libs/hooks/jupiter/useSwap";
 import { ICSJupiterSwapAbi } from "@/libs/hooks/neon/abis/ICSJupiterSwap";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import TransactionToast from "../toasts/TransactionToast";
 
 interface Props {
@@ -99,14 +99,12 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
 
     if (txReceipt.isPending && transactionStatus !== "pending") {
       setTransactionStatus("pending");
-
-      toast.custom(<TransactionToast status="pending" tx={hash} />);
+      toast.info(<TransactionToast status="pending" tx={hash} />);
     }
 
     if (txReceipt.isSuccess && transactionStatus !== "success") {
       setTransactionStatus("success");
-
-      toast.custom(<TransactionToast status="success" tx={hash} />);
+      toast.success(<TransactionToast status="success" tx={hash} />);
 
       if (swapStep === "approvalPending") {
         setHasAllowance(true);
@@ -121,9 +119,8 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
 
     if (txReceipt.isError && txReceipt.error && transactionStatus !== "error") {
       setTransactionStatus("error");
-
-      toast.custom(
-        <TransactionToast status="error" tx={txReceipt.error.message} />
+      toast.error(
+        <TransactionToast status="error" tx={txReceipt.error.message} />,
       );
       setSwapStep("error");
     }
@@ -139,7 +136,7 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
 
   useEffect(() => {
     if (isError && error) {
-      toast.custom(<TransactionToast status="error" tx={error.name} />);
+      toast(<TransactionToast status="error" tx={error.name} />);
       console.error(error);
       setSwapStep("error");
     }
@@ -207,7 +204,7 @@ const ConfirmSwap: NextPage<Props> = ({ onClose, price }) => {
     const instructions = await fetchSwapInstruction(
       quote,
       outputToken.evm,
-      address
+      address,
     );
     console.log(instructions);
     writeContract({
