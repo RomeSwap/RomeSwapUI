@@ -151,16 +151,16 @@ export default function SwapClient() {
         )}
       </div>
       <SwapInputComponent
-        customBg="bg-dark"
+        customBg="bg-grayBg"
         setType="input"
         token={inputToken}
         defaultToken={defaultInputToken}
         readOnly={false}
       />
       {/* Swap tokens button */}
-      <div className="flex justify-end lg:justify-center items-center h-1.5 lg:h-2 w-full relative">
+      <div className="flex justify-end lg:justify-center items-center h-1.5 lg:h-2 my-0.5 w-full relative">
         <button
-          className="absolute -top-6 right-1.5 lg:right-auto flex items-center justify-center w-[51px] h-[51px] rounded-full border-4 border-grayBg bg-[#FF9900] text-light text-2xl"
+          className="absolute -top-6 right-1.5 lg:right-auto flex items-center justify-center w-[51px] h-[51px] rounded-full border-[6px] border-grayBg bg-[#FF9900] text-light text-2xl"
           onClick={() => dispatch(swapInputOutput())}
           type="button"
           aria-label="Swap tokens"
@@ -176,16 +176,18 @@ export default function SwapClient() {
         defaultToken={defaultOutputToken}
         readOnly={true}
       />
-      <SwapBtn
-        confirmSwapModal={() => setIsConfirmSwapModal(!isConfirmSwapModal)}
-        isDisabled={
-          outputToken.weiAmount === undefined ||
-          outputToken.weiAmount === 0 ||
-          inputToken.weiAmount === undefined ||
-          inputToken.weiAmount >
-            (inputToken.userBalance ?? 0) * 10 ** inputToken.decimals
-        }
-      />
+      <div className="mt-3">
+        <SwapBtn
+          confirmSwapModal={() => setIsConfirmSwapModal(!isConfirmSwapModal)}
+          isDisabled={
+            outputToken.weiAmount === undefined ||
+            outputToken.weiAmount === 0 ||
+            inputToken.weiAmount === undefined ||
+            inputToken.weiAmount >
+              (inputToken.userBalance ?? 0) * 10 ** inputToken.decimals
+          }
+        />
+      </div>
       {isConfirmSwapModal && (
         <ConfirmSwap
           onClose={() => setIsConfirmSwapModal(!setIsConfirmSwapModal)}

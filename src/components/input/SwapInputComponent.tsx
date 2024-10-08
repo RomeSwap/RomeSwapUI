@@ -46,7 +46,12 @@ const SwapInputComponent = ({
   };
 
   return (
-    <div className={clsx("w-full flex flex-col p-4 rounded-lg", customBg)}>
+    <div
+      className={clsx(
+        "w-full flex flex-col p-4 rounded-lg py-6 lg:py-4",
+        customBg,
+      )}
+    >
       <div className="flex flex-col gap-y-2">
         <div className="flex items-center justify-between">
           <button
@@ -57,7 +62,7 @@ const SwapInputComponent = ({
             <div className="w-full h-full flex items-center gap-x-2">
               {token.logoURI && (
                 <Image
-                  className="w-[21px] h-[21px]"
+                  className="w-[21px] h-[21px] rounded-full"
                   src={
                     imageError || !token.logoURI
                       ? DEFAULT_LOGO_URI
@@ -80,7 +85,7 @@ const SwapInputComponent = ({
         <div
           className={clsx(
             "flex items-center justify-between font-thin",
-            nexa.className
+            nexa.className,
           )}
         >
           <input
