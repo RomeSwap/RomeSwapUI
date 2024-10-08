@@ -151,7 +151,7 @@ export default function SwapClient() {
         )}
       </div>
       <SwapInputComponent
-        customBg="bg-grayBg"
+        customBg="bg-lightGray"
         setType="input"
         token={inputToken}
         defaultToken={defaultInputToken}
