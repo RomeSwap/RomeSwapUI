@@ -27,7 +27,7 @@ const neonMainnet = defineChain({
   nativeCurrency: { name: 'NEON', symbol: 'NEON', decimals: 18 },
   rpcUrls: {
     default: {
-      http: ['https://neon-proxy-mainnet.solana.p2p.org'],
+      http: ['https://neon-mainnet.everstake.one'],
     },
   },
   blockExplorers: {
