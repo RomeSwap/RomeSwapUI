@@ -1,12 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
 import { socialLinks } from "@/libs/socialLinks";
 import { coolveticaRegular } from "@/app/fonts/fonts";
+import clsx from "clsx";
+import { usePathname } from "next/navigation";
 
 const FooterComp = () => {
+  const pathname = usePathname();
+  const isHome = () => {
+    if (pathname === "/") {
+      return true;
+    }
+  };
+
   return (
-    <footer className="mt-4 bg-[rgba(1,11,26,1)] py-4">
+    <footer
+      className={clsx(isHome() ? "mt-4" : "", "bg-[rgba(1,11,26,1)] py-4")}
+    >
       <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-y-2 lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-x-4">
           <Image
