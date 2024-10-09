@@ -6,7 +6,7 @@ import { neonProgram } from "./constants";
 const publicKeyToBytes32 = (solAddress: string) => {
   return ethers.zeroPadValue(
     ethers.toBeHex(ethers.decodeBase58(solAddress)),
-    32
+    32,
   ) as Address;
 };
 
@@ -43,7 +43,7 @@ const prepareInstructionAccounts = (accounts: AccountMeta[]): Address => {
     encodeKeys += ethers
       .solidityPacked(
         ["bytes32"],
-        [publicKeyToBytes32(account.pubkey.toString())]
+        [publicKeyToBytes32(account.pubkey.toString())],
       )
       .substring(2);
     encodeKeys += ethers

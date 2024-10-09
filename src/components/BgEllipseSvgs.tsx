@@ -21,7 +21,7 @@ const BgEllipseSvgs = () => {
       <div
         className={clsx(
           "absolute -bottom-[150px] lg:-bottom-[300px] -right-0 w-[200px] lg:w-[300px] h-[400px] lg:h-[600px] bg-[rgba(20,241,149,0.24)] rounded-l-full blur-[100px] lg:blur-[200px]",
-          isHome() ? "" : "lg:bottom-0 lg:h-[300px] rounded-bl-lg"
+          isHome() ? "" : "lg:bottom-0 lg:h-[300px] rounded-bl-lg",
         )}
       ></div>
     </div>

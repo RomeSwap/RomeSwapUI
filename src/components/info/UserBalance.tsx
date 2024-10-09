@@ -29,7 +29,7 @@ const UserBalance = ({
         setUserbalance({
           amount: tokenEvmAddress ? Number(data.value) : 0,
           type: setType,
-        })
+        }),
       );
     }
   }, [dispatch, setType, data?.value, tokenEvmAddress]);
@@ -42,8 +42,8 @@ const UserBalance = ({
           ? isLoading
             ? "..."
             : isSuccess && data?.value
-            ? (Number(data.value) / 10 ** data.decimals).toPrecision(4)
-            : "0"
+              ? (Number(data.value) / 10 ** data.decimals).toPrecision(4)
+              : "0"
           : "0"}{" "}
         MAX
       </button>
