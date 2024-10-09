@@ -24,24 +24,22 @@ export default function Home() {
           <div
             className={`${coolveticaRegular.className} text-4xl lg:text-5xl xl:text-8xl font-semibold tracking-wider xl:leading-[96px] text-center`}
           >
-            Trade on{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">
               Solana
             </span>{" "}
-            with{" "}
+            swaps right from your{" "}
             <span className="bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
               Metamask
             </span>
           </div>
           <p className={`text-paragraph`}>
-            Bring blockchain to the people. Solana supports experiences for
-            power users, new consumers, and everyone in between.
+            RomeSwap allows traders from EVM-compatible chains to execute swaps on Solana directly from their existing EVM-only wallets like MetaMask
           </p>
           <Link
             className={`w-[270px] text-center bg-solanaGradient text-white py-3 rounded-full shadow-lg text-xl `}
             href="/swap"
           >
-            Get started
+            Trade now
           </Link>
         </div>
       </section>
@@ -58,16 +56,15 @@ export default function Home() {
             </div>
           </div>
           <p className={`text-paragraph w-[90%] lg:w-full`}>
-            Bring blockchain to the people. Solana supports experiences for
-            power users, new consumers, and everyone in between. Bring
-            blockchain to the people. Solana supports experiences for power
-            users, new consumers, and everyone in between.
+            While the demand for trading on Solana is immense, EVM users face significant onboarding obstacles due to wallet incompatibilities.
+            RomeSwap eliminates this barrier by enabling seamless Solana trading without the need for a Solana-compatible wallet.
+            This innovation opens the door to onboarding millions of users from Ethereum, Base, and BSC into the Solana ecosystem.
           </p>
           <Link
             className={`w-[270px] text-center bg-orangeGradient text-white py-3 rounded-full shadow-lg text-xl `}
             href="/swap"
           >
-            Get started
+            Try it out
           </Link>
         </div>
         <div className="relative flex items-center justify-center">
