@@ -61,7 +61,7 @@ export default function Navbar() {
           : "bg-transparent",
       )}
     >
-      <nav className="relative flex items-center justify-between h-full max-w-[300px] md:max-w-2xl lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
+      <nav className="relative flex items-center justify-between h-full w-[calc(100vw-16px)] md:w-[80%] md:max-w-[80%] lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
         <Link href={"/"}>
           <div className="flex items-center gap-x-2">
             <Image
