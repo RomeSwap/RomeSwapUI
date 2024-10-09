@@ -14,7 +14,7 @@ export default function SwapLayout({
     <main
       className={clsx(
         "h-screen overflow-hidden bg-[url('/swap-bg.png')] bg-cover bg-center bg-fixed",
-        "before:absolute before:w-full before:h-full before:top-0 before:right-0 before:bg-background/80 before:z-0",
+        "before:absolute before:w-full before:h-screen before:top-0 before:right-0 before:bg-background/80 before:z-0",
       )}
     >
       <div className="absolute z-10 left-0 w-full h-full flex flex-col items-center justify-center overflow-hidden">
