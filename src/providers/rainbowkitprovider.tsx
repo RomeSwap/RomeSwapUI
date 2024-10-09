@@ -18,6 +18,7 @@ import {
   phantomWallet,
   braveWallet,
   trustWallet,
+  rabbyWallet
 } from "@rainbow-me/rainbowkit/wallets";
 
 const neonMainnet = defineChain({
@@ -55,6 +56,7 @@ const connectors = connectorsForWallets(
         trustWallet,
         coinbaseWallet,
         walletConnectWallet,
+        rabbyWallet,
         oktoWallet,
         braveWallet,
       ],
