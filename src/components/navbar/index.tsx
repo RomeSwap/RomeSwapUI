@@ -58,7 +58,7 @@ export default function Navbar() {
         "fixed z-40 top-0 left-0 text-light w-full h-[65px] lg:h-[70px] transition-all duration-300 ease-in-out",
         isScrolled
           ? " bg-background/90 lg:bg-transparent lg:backdrop-blur-lg"
-          : "bg-transparent"
+          : "bg-transparent",
       )}
     >
       <nav className="relative flex items-center justify-between h-full max-w-[300px] md:max-w-2xl lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
@@ -96,7 +96,7 @@ export default function Navbar() {
                   <div
                     className={clsx(
                       "transition-all duration-300 ease-in-out",
-                      isLinkActive(link.href) ? "opacity-1" : "opacity-0"
+                      isLinkActive(link.href) ? "opacity-1" : "opacity-0",
                     )}
                   >
                     {link.icon}
@@ -127,7 +127,7 @@ export default function Navbar() {
       {isMobileMenuActive && (
         <div
           className={clsx(
-            "absolute z-50 top-0 w-full min-h-screen backdrop-blur-xl flex flex-col items-center justify-around gap-y-4"
+            "absolute z-50 top-0 w-full min-h-screen backdrop-blur-xl flex flex-col items-center justify-around gap-y-4",
           )}
         >
           <button
@@ -143,7 +143,7 @@ export default function Navbar() {
                 <Link
                   className={clsx(
                     "text-center gap-x-2 py-2.5 px-3",
-                    isLinkActive(link.href) ? "text-light" : "text-grayText"
+                    isLinkActive(link.href) ? "text-light" : "text-grayText",
                   )}
                   href={link.href}
                   target={link.isExternal ? "_blank" : ""}

@@ -36,7 +36,7 @@ const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
       setWarningMsg("Your transaction may fall");
     } else if (slippage > 10 && slippage <= maxSlippageAllowed) {
       setWarningMsg(
-        "Your transaction may be frontrun and result in an unfavorable trade"
+        "Your transaction may be frontrun and result in an unfavorable trade",
       );
     } else if (slippage > maxSlippageAllowed) {
       setWarningMsg("Slippage too high, exceeding the maximum allowed limit");
@@ -81,7 +81,7 @@ const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
                       "w-16 bg-grayText/5 py-1 rounded-md border transition-all duration-300 ease-in-out",
                       isSlippageActive(slp)
                         ? "border-primary text-primary"
-                        : "border-transparent"
+                        : "border-transparent",
                     )}
                     type="button"
                     aria-label={`Set slippage to ${slp}%`}
@@ -122,8 +122,8 @@ const SlippageSettingsModal: React.FC<SlippageSettingsProps> = ({
               isButtonDisabled
                 ? "bg-gray-400 cursor-not-allowed"
                 : warningMsg
-                ? "bg-yellow-500 hover:bg-yellow-500/70"
-                : "bg-primary hover:bg-primary/70"
+                  ? "bg-yellow-500 hover:bg-yellow-500/70"
+                  : "bg-primary hover:bg-primary/70",
             )}
             type="button"
             disabled={isButtonDisabled}

@@ -25,7 +25,7 @@ export const jupiterTokenApi = createApi({
       query: () => "tokens?tags=verified",
       transformResponse: (result: { [address: string]: JupiterToken }) => {
         return Object.values(result).map(
-          (token: JupiterToken): Token => parseToken(token)
+          (token: JupiterToken): Token => parseToken(token),
         );
       },
     }),

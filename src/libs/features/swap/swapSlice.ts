@@ -66,7 +66,7 @@ export const fetchSPLAddress = createAsyncThunk(
     } catch (error) {
       console.error(error);
     }
-  }
+  },
 );
 
 export const swapSlice = createSlice({
@@ -96,7 +96,7 @@ export const swapSlice = createSlice({
     },
     setToken: (
       state,
-      action: PayloadAction<{ token: Token; type: "input" | "output" }>
+      action: PayloadAction<{ token: Token; type: "input" | "output" }>,
     ) => {
       const ptoken = action.payload.token;
 
@@ -128,17 +128,17 @@ export const swapSlice = createSlice({
     },
     setUserbalance: (
       state,
-      action: PayloadAction<{ amount: number; type: "input" | "output" }>
+      action: PayloadAction<{ amount: number; type: "input" | "output" }>,
     ) => {
       switch (action.payload.type) {
         case "input":
           state.inputToken.userBalance = Number(
-            action.payload.amount / 10 ** state.inputToken.decimals
+            action.payload.amount / 10 ** state.inputToken.decimals,
           );
           return;
         case "output":
           state.outputToken.userBalance = Number(
-            action.payload.amount / 10 ** state.outputToken.decimals
+            action.payload.amount / 10 ** state.outputToken.decimals,
           );
           return;
       }
@@ -162,7 +162,7 @@ export const swapSlice = createSlice({
     },
     setEvmAddress: (
       state,
-      action: PayloadAction<{ address: Address; type: "input" | "output" }>
+      action: PayloadAction<{ address: Address; type: "input" | "output" }>,
     ) => {
       switch (action.payload.type) {
         case "input":

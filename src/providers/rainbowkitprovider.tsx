@@ -8,7 +8,7 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { defineChain } from 'viem';
+import { defineChain } from "viem";
 
 import {
   metaMaskWallet,
@@ -22,28 +22,28 @@ import {
 
 const neonMainnet = defineChain({
   id: 245_022_934,
-  network: 'neonMainnet',
-  name: 'Solana (Neon EVM)',
-  nativeCurrency: { name: 'NEON', symbol: 'NEON', decimals: 18 },
+  network: "neonMainnet",
+  name: "Solana (Neon EVM)",
+  nativeCurrency: { name: "NEON", symbol: "NEON", decimals: 18 },
   rpcUrls: {
     default: {
-      http: ['https://neon-mainnet.everstake.one'],
+      http: ["https://neon-mainnet.everstake.one"],
     },
   },
   blockExplorers: {
     default: {
-      name: 'Neonscan',
-      url: 'https://neonscan.org',
+      name: "Neonscan",
+      url: "https://neonscan.org",
     },
   },
   contracts: {
     multicall3: {
-      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
       blockCreated: 206545524,
     },
   },
   testnet: false,
-})
+});
 
 const connectors = connectorsForWallets(
   [
@@ -60,7 +60,7 @@ const connectors = connectorsForWallets(
       ],
     },
   ],
-  { appName: "RainbowKit App", projectId: "a23a6c61fc0db163a7e310431e37299f" }
+  { appName: "RainbowKit App", projectId: "a23a6c61fc0db163a7e310431e37299f" },
 );
 
 export const config = createConfig({
