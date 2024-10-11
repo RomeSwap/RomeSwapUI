@@ -18,7 +18,10 @@ const FooterComp = () => {
 
   return (
     <footer
-      className={clsx(isHome() ? "mt-4" : "", "bg-[rgba(1,11,26,1)] py-4")}
+      className={clsx(
+        isHome() ? "mt-4" : "",
+        "w-full lg:h-[104px] relative z-50 bg-[rgba(1,11,26,1)] py-4",
+      )}
     >
       <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-y-2 lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-x-4">
