@@ -13,7 +13,7 @@ export const navLinksData = [
   },
   {
     name: "Bridge",
-    href: "https://www.icecreamswap.com/bridge",
+    href: "https://icecreamswap.com/bridge?chain=neon",
     isExternal: true,
   },
   {
