@@ -22,6 +22,7 @@ import SwapBtn from "@/components/button/SwapBtn";
 import ConfirmSwap from "@/components/modals/ConfirmSwap";
 import { useGetVerifiedTokensQuery } from "@/libs/features/jupiter/tokenSlice";
 import SwapInputComponent from "@/components/input/SwapInputComponent";
+import RefreshBtn from "@/components/button/RefreshBtn";
 // import TransactionToast from "@/components/toasts/TransactionToast";
 // import { toast } from "react-toastify";
 
@@ -127,15 +128,7 @@ export default function SwapClient() {
   return (
     <section className="h-auto p-5 bg-grayBg rounded-2xl  w-[95%] max-w-[428px] lg:w-[428px] flex flex-col justify-center">
       <div className="w-full flex items-center justify-end gap-x-2 mb-4">
-        <button
-          type="button"
-          className="flex items-center justify-center text-primary"
-          // onClick={toastTest} // btw, this btn still has nothing to do
-        >
-          <span className="text-lg lg:text-xl">
-            <FaArrowRotateLeft />
-          </span>
-        </button>
+        <RefreshBtn />
         <button
           type="button"
           className=" text-light"
