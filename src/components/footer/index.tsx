@@ -23,7 +23,7 @@ const FooterComp = () => {
       <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-y-2 lg:max-w-[972px] xl:max-w-screen-xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-x-4">
           <Image
-            src="/logo.png"
+            src={"/romeswap.svg"}
             width={64}
             height={68}
             alt="Rome Exchange Logo"

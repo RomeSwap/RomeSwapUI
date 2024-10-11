@@ -65,7 +65,7 @@ export default function Navbar() {
         <Link href={"/"}>
           <div className="flex items-center gap-x-2">
             <Image
-              src={"/logo.png"}
+              src={"/romeswap.svg"}
               width={32}
               height={32}
               alt="RomeSwap Logo"
