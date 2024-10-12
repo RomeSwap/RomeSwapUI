@@ -9,9 +9,13 @@ import { useEffect, useState } from "react";
 import { RiMenuFoldLine } from "react-icons/ri";
 import { FaCircle } from "react-icons/fa6";
 import clsx from "clsx";
-
+import { motion } from "framer-motion";
 import { clashGroteskBold } from "@/app/fonts/fonts";
-import { GoXCircleFill } from "react-icons/go";
+import { FaTimes } from "react-icons/fa";
+import {
+  mobileMenuChildrenVariants,
+  mobileMenuVariants,
+} from "@/libs/variants/framerVariants";
 
 export default function Navbar() {
   const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
@@ -116,48 +120,78 @@ export default function Navbar() {
           <CustomConnectWalletBtn />
         </div>
         <button
-          className="lg:hidden text-4xl text-primary"
+          className="lg:hidden text-4xl text-primary z-50"
           type="button"
           aria-label="Open menu"
           onClick={toggleMenu}
         >
-          <RiMenuFoldLine />
+          <motion.div
+            key={isMobileMenuActive ? "close" : "menu"}
+            initial={{ rotate: 0 }}
+            animate={{ rotate: isMobileMenuActive ? 180 : 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            {isMobileMenuActive ? (
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <FaTimes size={30} />
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <RiMenuFoldLine size={30} />
+              </motion.div>
+            )}
+          </motion.div>
         </button>
       </nav>
       {isMobileMenuActive && (
-        <div
-          className={clsx(
-            "absolute z-50 top-0 w-full min-h-screen backdrop-blur-xl flex flex-col items-center justify-around gap-y-4",
-          )}
-        >
-          <button
-            className="absolute right-9 top-4 text-4xl"
-            type="button"
-            onClick={toggleMenu}
+        <div className="absolute z-40 top-0 w-full h-screen bg-background/60 backdrop-blur-xl">
+          <motion.ul
+            className={clsx(
+              "h-full flex flex-col items-center justify-around gap-y-4",
+            )}
+            variants={mobileMenuVariants}
+            initial="closed"
+            animate="open"
           >
-            <GoXCircleFill />
-          </button>
-          <div className="flex flex-col items-center justify-center gap-y-4">
-            {navLinksData.map((link, idx) => {
-              return (
-                <Link
-                  className={clsx(
-                    "text-center gap-x-2 py-2.5 px-3",
-                    isLinkActive(link.href) ? "text-light" : "text-grayText",
-                  )}
-                  href={link.href}
-                  target={link.isExternal ? "_blank" : ""}
-                  key={idx}
-                  onClick={toggleMenu}
-                >
-                  {link.name}
-                </Link>
-              );
-            })}
-          </div>
-          <div className="max-w-lg mx-auto">
-            <CustomConnectWalletBtn />
-          </div>
+            <div className="flex flex-col items-center justify-center gap-y-4">
+              {navLinksData.map((link, idx) => {
+                return (
+                  <motion.li
+                    key={idx}
+                    variants={mobileMenuChildrenVariants}
+                    className={clsx(
+                      "text-center gap-x-2 py-2.5 px-3",
+                      isLinkActive(link.href) ? "text-light" : "text-grayText",
+                    )}
+                  >
+                    <Link
+                      href={link.href}
+                      target={link.isExternal ? "_blank" : ""}
+                      onClick={toggleMenu}
+                    >
+                      {link.name}
+                    </Link>
+                  </motion.li>
+                );
+              })}
+            </div>
+            <motion.div
+              className="w-[90%]"
+              variants={mobileMenuChildrenVariants}
+            >
+              <CustomConnectWalletBtn />
+            </motion.div>
+          </motion.ul>
         </div>
       )}
     </header>
