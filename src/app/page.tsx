@@ -1,17 +1,39 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   clashGroteskBold,
   clashGroteskRegular,
   coolveticaRegular,
 } from "@/app/fonts/fonts";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { fadeIn, inViewVars } from "@/libs/variants/framerVariants";
 
 export default function Home() {
+  const controls = useAnimation();
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    }
+    if (!inView) {
+      controls.start("hidden");
+    }
+  }, [controls, inView]);
+
   return (
-    <main className="flex flex-col items-center justify-center">
-      <section className="flex flex-col lg:flex-row items-center justify-center">
-        <div className="w-full lg:h-full flex items-center">
+    <main className="flex flex-col items-center justify-center overflow-x-hidden">
+      <motion.section className="flex flex-col lg:flex-row items-center justify-center">
+        <motion.div
+          className="w-full lg:h-full flex items-center"
+          variants={fadeIn("right", 0.2)}
+          initial="hidden"
+          animate="show"
+        >
           <Image
             className=""
             src="/colosseum.png"
@@ -19,8 +41,13 @@ export default function Home() {
             height={1196}
             alt="Banner Image"
           />
-        </div>
-        <div className="w-full flex flex-col items-center justify-center gap-y-6 px-4">
+        </motion.div>
+        <motion.div
+          className="w-full flex flex-col items-center justify-center gap-y-6 px-4"
+          variants={fadeIn("down", 0.3)}
+          initial="hidden"
+          animate="show"
+        >
           <div
             className={`${coolveticaRegular.className} text-4xl lg:text-5xl xl:text-8xl font-semibold tracking-wider xl:leading-[96px] text-center`}
           >
@@ -33,7 +60,9 @@ export default function Home() {
             </span>
           </div>
           <p className={`text-paragraph`}>
-            RomeSwap allows traders from EVM-compatible chains to execute swaps on Solana directly from their existing EVM-only wallets like MetaMask
+            RomeSwap allows traders from EVM-compatible chains to execute swaps
+            on Solana directly from their existing EVM-only wallets like
+            MetaMask
           </p>
           <Link
             className={`w-[270px] text-center bg-solanaGradient text-white py-3 rounded-full shadow-lg text-xl `}
@@ -41,9 +70,15 @@ export default function Home() {
           >
             Trade now
           </Link>
-        </div>
-      </section>
-      <section className="w-full flex flex-col-reverse lg:flex-row items-center justify-around h-screen xl:pl-48">
+        </motion.div>
+      </motion.section>
+      <motion.section
+        variants={inViewVars}
+        ref={ref}
+        initial="hidden"
+        animate={controls}
+        className="w-full flex flex-col-reverse lg:flex-row items-center justify-around h-screen xl:pl-48"
+      >
         <div
           className={`flex flex-col items-center justify-center gap-5 text-center text-[26px] leading-6 lg:max-w-[537px]`}
         >
@@ -56,9 +91,12 @@ export default function Home() {
             </div>
           </div>
           <p className={`text-paragraph w-[90%] lg:w-full`}>
-            While the demand for trading on Solana is immense, EVM users face significant onboarding obstacles due to wallet incompatibilities.
-            RomeSwap eliminates this barrier by enabling seamless Solana trading without the need for a Solana-compatible wallet.
-            This innovation opens the door to onboarding millions of users from Ethereum, Base, and BSC into the Solana ecosystem.
+            While the demand for trading on Solana is immense, EVM users face
+            significant onboarding obstacles due to wallet incompatibilities.
+            RomeSwap eliminates this barrier by enabling seamless Solana trading
+            without the need for a Solana-compatible wallet. This innovation
+            opens the door to onboarding millions of users from Ethereum, Base,
+            and BSC into the Solana ecosystem.
           </p>
           <Link
             className={`w-[270px] text-center bg-orangeGradient text-white py-3 rounded-full shadow-lg text-xl `}
@@ -101,7 +139,7 @@ export default function Home() {
             />
           </div>
         </div>
-      </section>
+      </motion.section>
     </main>
   );
 }
