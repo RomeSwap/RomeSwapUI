@@ -23,6 +23,8 @@ import ConfirmSwap from "@/components/modals/ConfirmSwap";
 import { useGetVerifiedTokensQuery } from "@/libs/features/jupiter/tokenSlice";
 import SwapInputComponent from "@/components/input/SwapInputComponent";
 import RefreshBtn from "@/components/button/RefreshBtn";
+import { motion } from "framer-motion";
+import { fadeIn } from "@/libs/variants/framerVariants";
 // import TransactionToast from "@/components/toasts/TransactionToast";
 // import { toast } from "react-toastify";
 
@@ -126,7 +128,12 @@ export default function SwapClient() {
   // };
 
   return (
-    <section className="h-auto p-5 bg-grayBg rounded-2xl  w-[95%] max-w-[428px] lg:w-[428px] flex flex-col justify-center">
+    <motion.section
+      className="h-auto p-5 bg-grayBg rounded-2xl  w-[95%] max-w-[428px] lg:w-[428px] flex flex-col justify-center"
+      variants={fadeIn("up", 0.1)}
+      initial="hidden"
+      animate="show"
+    >
       <div className="w-full flex items-center justify-end gap-x-2 mb-4">
         <RefreshBtn />
         <button
@@ -187,6 +194,6 @@ export default function SwapClient() {
           price={0}
         />
       )}
-    </section>
+    </motion.section>
   );
 }
