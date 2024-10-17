@@ -19,6 +19,7 @@ const config: Config = {
         background: "#04142C",
         error: "#991b1b",
         pending: "#FFDE21",
+        yellowRome: "#D69830",
       },
       backgroundImage: {
         solanaGradient:

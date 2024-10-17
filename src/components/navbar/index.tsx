@@ -120,7 +120,7 @@ export default function Navbar() {
           <CustomConnectWalletBtn />
         </div>
         <button
-          className="lg:hidden text-4xl text-primary z-50"
+          className="lg:hidden text-4xl text-yellowRome z-50"
           type="button"
           aria-label="Open menu"
           onClick={toggleMenu}
